@@ -35,7 +35,54 @@
         }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        /* New Styles for Task System */
+        /* New Styles */
+        .streak-counter { 
+            background: linear-gradient(45deg, #ff8c00, #ff5500); 
+            color: white; 
+            padding: 8px 12px; 
+            border-radius: 20px; 
+            font-weight: bold; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 5px;
+        }
+        .level-badge {
+            background: linear-gradient(45deg, #6366f1, #8b5cf6);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .progress-bar {
+            height: 6px;
+            background-color: #333;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff8c00, #ff5500);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        /* Notification animation */
+        @keyframes ring { 
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            75% { transform: rotate(-15deg); }
+        }
+        .ringing { animation: ring 0.5s ease-in-out infinite; }
+        /* Profile image */
+        .profile-image {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ff8c00;
+        }
+        /* Task System Styles */
         .task-card { transition: all 0.3s ease; }
         .task-card.disabled { opacity: 0.6; filter: grayscale(1); }
         .task-timer {
@@ -44,9 +91,6 @@
             padding: 8px 12px;
             border-radius: 20px;
             font-weight: bold;
-        }
-        .progress-ring {
-            transform: rotate(-90deg);
         }
         .video-container {
             position: relative;
@@ -511,7 +555,6 @@
                 renderTasks();
             } catch (error) {
                 console.error("Error fetching tasks:", error);
-                // Load default tasks if none exist
                 loadDefaultTasks();
             }
         }
@@ -679,7 +722,6 @@
                 return showAlert("This task is no longer available.");
             }
 
-            // Show group join modal
             document.getElementById('group-join-title').textContent = task.title;
             document.getElementById('group-join-timer').textContent = task.timer_seconds + 's';
             document.getElementById('group-join-modal').classList.remove('hidden');
@@ -701,10 +743,8 @@
                 }
             }, 1000);
             
-            // Store timer reference
             activeTimers.groupJoin = timerInterval;
             
-            // Set up open button handler
             openBtn.onclick = () => {
                 clearInterval(activeTimers.groupJoin);
                 completeGroupJoinTask(taskId);
@@ -723,15 +763,12 @@
             if (!task) return;
             
             try {
-                // Update global task count
                 await updateDoc(doc(db, "tasks", taskId), {
                     current_count: increment(1)
                 });
                 
-                // Update user balance
                 await updateBalance(task.reward);
                 
-                // Update user task completion
                 await updateDoc(doc(db, "users", currentUser.uid), {
                     totalTasksCompleted: increment(1),
                     lastTaskDate: new Date().toISOString().split('T')[0]
@@ -740,7 +777,6 @@
                 showAlert(`🎉 You earned ${task.reward} coins for joining the group!`);
                 closeGroupJoinModal();
                 
-                // Reload tasks to update availability
                 await fetchTaskConfig();
                 
             } catch (error) {
@@ -755,16 +791,14 @@
                 return showAlert("This task is no longer available.");
             }
 
-            // Show video modal
             document.getElementById('video-watch-title').textContent = task.title;
             document.getElementById('video-watch-timer').textContent = '0s';
             document.getElementById('video-progress').textContent = '0% Complete';
             document.getElementById('video-progress-bar').style.width = '0%';
             document.getElementById('video-complete-btn').disabled = true;
             
-            // Set up video (using a sample educational video)
             const videoPlayer = document.getElementById('video-player');
-            videoPlayer.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0"; // Sample video
+            videoPlayer.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0";
             
             document.getElementById('video-watch-modal').classList.remove('hidden');
             
@@ -775,7 +809,6 @@
             const progressBar = document.getElementById('video-progress-bar');
             const completeBtn = document.getElementById('video-complete-btn');
             
-            // Simulate video watching progress
             const progressInterval = setInterval(() => {
                 timeWatched++;
                 const progress = (timeWatched / totalTime) * 100;
@@ -790,10 +823,8 @@
                 }
             }, 1000);
             
-            // Store interval reference
             activeTimers.videoWatch = progressInterval;
             
-            // Set up complete button handler
             completeBtn.onclick = () => {
                 clearInterval(activeTimers.videoWatch);
                 completeWatchVideoTask(taskId);
@@ -806,7 +837,6 @@
                 clearInterval(activeTimers.videoWatch);
             }
             
-            // Stop video
             const videoPlayer = document.getElementById('video-player');
             videoPlayer.src = "";
         }
@@ -816,15 +846,12 @@
             if (!task) return;
             
             try {
-                // Update global task count
                 await updateDoc(doc(db, "tasks", taskId), {
                     current_count: increment(1)
                 });
                 
-                // Update user balance
                 await updateBalance(task.reward);
                 
-                // Update user task completion
                 await updateDoc(doc(db, "users", currentUser.uid), {
                     totalTasksCompleted: increment(1),
                     lastTaskDate: new Date().toISOString().split('T')[0]
@@ -833,7 +860,6 @@
                 showAlert(`🎉 You earned ${task.reward} coins for watching the video!`);
                 closeVideoModal();
                 
-                // Reload tasks to update availability
                 await fetchTaskConfig();
                 
             } catch (error) {
@@ -842,11 +868,679 @@
             }
         }
 
-        // ... (rest of the existing code remains the same)
+        window.claimReward = async function(taskType) {
+            const today = new Date().toISOString().split('T')[0];
+            const userRef = doc(db, "users", currentUser.uid);
 
-        // Keep all the existing functions like updateBalance, handleWithdrawal, etc.
-        // They should remain unchanged from your previous implementation
+            if (userData.lastAdWatchDate !== today) {
+                await updateDoc(userRef, { 
+                    dailyAdCount: 0, 
+                    lastAdWatchDate: today 
+                });
+                userData.dailyAdCount = 0;
+                userData.lastAdWatchDate = today;
+            }
 
+            if (userData.dailyAdCount >= (appConfig.dailyAdLimit || 10)) {
+                return showAlert("আপনার আজকের Ads দেখা সম্পূর্ণ হয়েছে।");
+            }
+            
+            if (typeof window.show_9549781 !== 'function') {
+                return showAlert("Ad service এখন উপলব্ধ না। অনুগ্রহ করে পরে চেষ্টা করুন।");
+            }
+            
+            let adPromise;
+            switch(taskType) {
+                case 'interstitial':
+                    adPromise = window.show_9549781();
+                    break;
+                case 'popup':
+                    adPromise = window.show_9549781('pop');
+                    break;
+                case 'inApp':
+                    adPromise = window.show_9549781({ type: 'inApp', inAppSettings: { frequency: 2, capping: 0.1, interval: 30, timeout: 5, everyPage: false } });
+                    break;
+                case 'miniApp':
+                    adPromise = window.show_9549781();
+                    break;
+                default:
+                    return;
+            }
+
+            adPromise.then(async () => {
+                const newCount = (userData.dailyAdCount || 0) + 1;
+                await updateDoc(userRef, { 
+                    dailyAdCount: newCount,
+                    lastTaskDate: today,
+                    totalTasksCompleted: (userData.totalTasksCompleted || 0) + 1
+                });
+                
+                userData.dailyAdCount = newCount;
+                userData.lastTaskDate = today;
+                userData.totalTasksCompleted = (userData.totalTasksCompleted || 0) + 1;
+                
+                const rewardAmount = 50;
+                
+                if (rewardAmount > 0) {
+                    await updateBalance(rewardAmount);
+                    showAlert(`🎉 অভিনন্দন আপনি ${rewardAmount} Coins জিতেছেন।`);
+                }
+                
+                updateAdsLeftCount();
+                updateProfileStats();
+                
+            }).catch(e => {
+                console.error("Ad error:", e);
+                showAlert('দুঃখিত এডস দেখানো সম্ভব না।');
+            });
+        }
+
+        async function updateBalance(amount) {
+            if (!currentUser) return;
+            
+            const newBalance = (userData.balance || 0) + amount;
+            const userRef = doc(db, "users", currentUser.uid);
+            
+            await updateDoc(userRef, { 
+                balance: newBalance,
+                totalEarned: (userData.totalEarned || 0) + (amount > 0 ? amount : 0)
+            });
+            
+            userData.balance = newBalance;
+            
+            if (amount > 0) {
+                userData.totalEarned = (userData.totalEarned || 0) + amount;
+            }
+            
+            updateUI();
+        }
+
+        function updateUI() {
+            if (!userData) return;
+            
+            const balance = userData.balance || 0;
+            coinBalanceEl.textContent = balance;
+            walletCoinBalanceEl.textContent = balance;
+            
+            profileNameEl.textContent = userData.name || 'No Name';
+            profileEmailEl.textContent = userData.email || 'No Email';
+            
+            referralCodeEl.textContent = userData.referralCode || '...';
+            minWithdrawalInfoEl.textContent = `${appConfig.minWithdrawal || 5000} Coins`;
+            coinValueInfoEl.textContent = `${appConfig.coinValueCoins || 1000} Coins = ৳${appConfig.coinValueInr || 10}`;
+            
+            withdrawMethodSelect.innerHTML = '';
+            (appConfig.paymentMethods || []).forEach(method => {
+                const option = document.createElement('option');
+                option.value = method;
+                option.textContent = method;
+                withdrawMethodSelect.appendChild(option);
+            });
+            
+            updateDynamicPaymentFields();
+            updateAdsLeftCount();
+            updateStreakDisplay();
+            updateLevelDisplay();
+            updateReferralStats();
+            updateProfileStats();
+        }
+
+        function updateProfileStats() {
+            document.getElementById('tasks-completed').textContent = userData.totalTasksCompleted || 0;
+            document.getElementById('total-earned').textContent = `${userData.totalEarned || 0} coins`;
+            document.getElementById('total-withdrawn').textContent = `${userData.totalWithdrawn || 0} coins`;
+            
+            if (userData.createdAt) {
+                const joinDate = userData.createdAt.toDate();
+                document.getElementById('member-since').textContent = joinDate.toLocaleDateString();
+            }
+        }
+
+        function updateStreakDisplay() {
+            if (userData.streakCount > 0) {
+                streakCounterEl.style.display = 'inline-flex';
+                streakDaysEl.textContent = userData.streakCount;
+                
+                const profileStreak = document.getElementById('profile-streak');
+                if (profileStreak) {
+                    profileStreak.querySelector('span').textContent = userData.streakCount;
+                }
+            }
+        }
+
+        function updateLevelDisplay() {
+            const currentLevel = userData.level || 1;
+            userLevelEl.textContent = `Lvl ${currentLevel}`;
+            document.getElementById('profile-level').textContent = `Lvl ${currentLevel}`;
+        }
+
+        function updateReferralUI() {
+            if (userData.referredBy) {
+                referralInputSection.classList.add('hidden');
+                referralUsedSection.classList.remove('hidden');
+                referralBonusAmountEl.textContent = 100;
+            } else {
+                referralInputSection.classList.remove('hidden');
+                referralUsedSection.classList.add('hidden');
+            }
+        }
+
+        async function updateReferralStats() {
+            const referralsRef = collection(db, "users");
+            const q = query(referralsRef, where("referredBy", "==", userData.referralCode));
+            const querySnapshot = await getDocs(q);
+            
+            totalReferralsEl.textContent = querySnapshot.size;
+            referralEarningsEl.textContent = querySnapshot.size * 100;
+        }
+
+        function updateAdsLeftCount() {
+            const today = new Date().toISOString().split('T')[0];
+            if (userData.lastAdWatchDate !== today) {
+                userData.dailyAdCount = 0;
+            }
+            const adsLeft = Math.max(0, (appConfig.dailyAdLimit || 10) - userData.dailyAdCount);
+            adsLeftCountEl.textContent = adsLeft;
+        }
+
+        function updateDynamicPaymentFields() {
+            const selectedMethod = withdrawMethodSelect.value.toLowerCase();
+            let placeholder = "Detail Daalein";
+            if (selectedMethod.includes('upi')) placeholder = "আপনার UPI আইডি লিখুন";
+            if (selectedMethod.includes('paytm')) placeholder = "আপনার Paytm নম্বর লিখুন";
+            if (selectedMethod.includes('bkash')) placeholder = "আপনার Bkash নম্বর লিখুন";
+            if (selectedMethod.includes('nagad')) placeholder = "আপনার Nagad নম্বর লিখুন";
+            if (selectedMethod.includes('rocket')) placeholder = "আপনার Rocket নম্বর লিখুন";
+            paymentDetailsContainer.innerHTML = `<input id="payment-detail-input" type="text" placeholder="${placeholder}" class="w-full p-3 rounded-lg input-field">`;
+        }
+
+        function showMainPage(pageId) {
+            document.querySelectorAll('.main-page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function navigateTo(pageId) {
+            document.querySelectorAll('.sub-page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active', 'text-accent');
+                if (link.dataset.page === pageId) link.classList.add('active', 'text-accent');
+            });
+            
+            if (pageId === 'wallet-page') loadWithdrawalHistory();
+            if (pageId === 'refer-page') updateReferralStats();
+            if (pageId === 'notifications-page') loadNotifications();
+            if (pageId === 'profile-page') updateProfileStats();
+        }
+        window.navigateTo = navigateTo;
+
+        function setupEventListeners() {
+            document.getElementById('show-signup').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('login-view').classList.add('hidden');
+                document.getElementById('signup-view').classList.remove('hidden');
+            });
+            
+            document.getElementById('show-login').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('signup-view').classList.add('hidden');
+                document.getElementById('login-view').classList.remove('hidden');
+            });
+            
+            document.getElementById('signup-btn').addEventListener('click', handleSignup);
+            document.getElementById('login-btn').addEventListener('click', handleLogin);
+            document.getElementById('logout-btn').addEventListener('click', handleLogout);
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pageId = link.dataset.page;
+                    navigateTo(pageId);
+                });
+            });
+            
+            document.getElementById('notification-bell').addEventListener('click', () => {
+                navigateTo('notifications-page');
+            });
+            
+            document.getElementById('copy-code-btn').addEventListener('click', copyReferralCode);
+            document.getElementById('share-btn').addEventListener('click', shareReferralCode);
+            document.getElementById('withdraw-btn').addEventListener('click', handleWithdrawal);
+            document.getElementById('home-withdraw-btn').addEventListener('click', () => navigateTo('wallet-page'));
+            document.getElementById('apply-referral-btn').addEventListener('click', handleApplyReferralCode);
+            withdrawMethodSelect.addEventListener('change', updateDynamicPaymentFields);
+
+            document.getElementById('profile-image-upload').addEventListener('change', handleProfileImageUpload);
+            
+            document.getElementById('alert-ok-btn').addEventListener('click', () => {
+                document.getElementById('custom-alert').classList.add('hidden');
+            });
+        }
+
+        async function handleSignup() {
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            
+            if (!name || !email || !password) {
+                return showAlert("অনুগ্রহ করে সমস্ত ঘর পূরণ করুন।");
+            }
+            
+            if (password.length < 6) {
+                return showAlert("পাসওয়ার্ড至少 ৬টি অক্ষর長 হওয়া প্রয়োজন。");
+            }
+            
+            loader.style.display = 'flex';
+            
+            try {
+                await createUserWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                showAlert(error.message);
+                loader.style.display = 'none';
+            }
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!email || !password) {
+                return showAlert("অনুগ্রহ করে Email Or Password দিন।");
+            }
+            
+            loader.style.display = 'flex';
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                showAlert(error.message);
+                loader.style.display = 'none';
+            }
+        }
+
+        async function handleLogout() {
+            await signOut(auth);
+        }
+
+        async function checkNewNotifications() {
+            const lastCheck = userData.lastNotificationCheck;
+            if (!lastCheck || typeof lastCheck.seconds === 'undefined') {
+                return;
+            }
+            
+            const q = query(collection(db, "notifications"), where("createdAt", ">", lastCheck), limit(1));
+            const querySnapshot = await getDocs(q);
+            
+            if (!querySnapshot.empty) {
+                notificationDot.style.display = 'block';
+                notificationBell.classList.add('ringing');
+                
+                try {
+                    await notificationSound.play();
+                } catch (error) {
+                    console.log("Notification sound play failed:", error);
+                }
+                
+                setTimeout(() => {
+                    notificationBell.classList.remove('ringing');
+                }, 2000);
+            } else {
+                notificationDot.style.display = 'none';
+            }
+        }
+
+        async function loadNotifications() {
+            const listEl = document.getElementById('notifications-list');
+            listEl.innerHTML = '<p class="text-gray-400">Loading...</p>';
+            notificationDot.style.display = 'none';
+            
+            const q = query(collection(db, "notifications"), orderBy("createdAt", "desc"));
+            
+            try {
+                const querySnapshot = await getDocs(q);
+                if (querySnapshot.empty) {
+                    listEl.innerHTML = '<p class="text-gray-400 text-center">Koi notifications nahi hain.</p>';
+                    return;
+                }
+                
+                listEl.innerHTML = '';
+                querySnapshot.forEach(doc => {
+                    const msg = doc.data();
+                    const date = msg.createdAt ? msg.createdAt.toDate().toLocaleDateString() : 'N/A';
+                    listEl.innerHTML += `
+                        <div class="card-bg p-4 rounded-lg">
+                            <div class="flex justify-between items-center mb-1">
+                                <h3 class="font-bold">${msg.title}</h3>
+                                <p class="text-xs text-gray-400">${date}</p>
+                            </div>
+                            <p class="text-sm text-gray-300">${msg.message}</p>
+                        </div>
+                    `;
+                });
+                
+                await updateDoc(doc(db, "users", currentUser.uid), { 
+                    lastNotificationCheck: serverTimestamp() 
+                });
+            } catch (error) {
+                console.error("Error loading notifications:", error);
+                listEl.innerHTML = '<p class="text-red-400">Notifications load করার সময় একটি ত্রুটি হয়েছে।</p>';
+            }
+        }
+
+        async function loadWithdrawalHistory() {
+            const historyList = document.getElementById('withdrawal-history-list');
+            historyList.innerHTML = '<p class="text-gray-400">History load ho rahi hai...</p>';
+            
+            const q = query(collection(db, "withdrawals"), where("userId", "==", currentUser.uid));
+            
+            try {
+                const querySnapshot = await getDocs(q);
+                if (querySnapshot.empty) {
+                    historyList.innerHTML = '<p class="text-gray-400">Aapne abhi tak koi withdrawal nahi kiya hai.</p>';
+                    return;
+                }
+                
+                const withdrawals = [];
+                querySnapshot.forEach(doc => withdrawals.push(doc.data()));
+                
+                withdrawals.sort((a, b) => (b.requestedAt?.seconds || 0) - (a.requestedAt?.seconds || 0));
+                
+                historyList.innerHTML = '';
+                withdrawals.forEach(request => {
+                    const status = request.status;
+                    let statusColor = 'text-yellow-400';
+                    if (status === 'approved') statusColor = 'text-green-400';
+                    else if (status === 'rejected') statusColor = 'text-red-400';
+                    
+                    const date = request.requestedAt ? request.requestedAt.toDate().toLocaleDateString() : 'N/A';
+                    
+                    historyList.innerHTML += `
+                        <div class="card-bg p-3 rounded-lg flex items-center justify-between">
+                            <div>
+                                <p class="font-semibold">${request.amount} Coins - ${request.method}</p>
+                                <p class="text-xs text-gray-400">${date}</p>
+                            </div>
+                            <p class="font-bold ${statusColor} capitalize">${status}</p>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error("Error fetching withdrawal history: ", error);
+                historyList.innerHTML = '<p class="text-red-400">History লোড করার সময় একটি ত্রুটি হয়েছে।</p>';
+            }
+        }
+        
+        async function handleApplyReferralCode() {
+            if (userData.referredBy) {
+                return showAlert("আপনি ইতিমধ্যেই একটি রেফারেল কোড ব্যবহার করেছেন।");
+            }
+            
+            const codeInput = document.getElementById('enter-referral-code');
+            const code = codeInput.value.trim().toUpperCase();
+            
+            if (!code) {
+                return showAlert("অনুগ্রহ করে একটি কোড লিখুন।");
+            }
+            
+            if (code === userData.referralCode) {
+                return showAlert("আপনি নিজের কোড ব্যবহার করতে পারবেন না।");
+            }
+            
+            loader.style.display = 'flex';
+            await applyReferralBonus(code, true);
+            codeInput.value = '';
+            loader.style.display = 'none';
+        }
+
+        async function applyReferralBonus(referrerCode, isManualApply = false) {
+            const usersRef = collection(db, "users");
+            const q = query(usersRef, where("referralCode", "==", referrerCode));
+            
+            try {
+                const querySnapshot = await getDocs(q);
+                if (!querySnapshot.empty) {
+                    const referrerDoc = querySnapshot.docs[0];
+                    const referrerRef = doc(db, "users", referrerDoc.id);
+                    const referrerData = referrerDoc.data();
+                    
+                    await updateDoc(referrerRef, { 
+                        balance: (referrerData.balance || 0) + 100 
+                    });
+                    
+                    const newUserRef = doc(db, "users", currentUser.uid);
+                    await updateDoc(newUserRef, { 
+                        balance: (userData.balance || 0) + 100, 
+                        referredBy: referrerCode 
+                    });
+                    
+                    userData.balance += 100;
+                    userData.referredBy = referrerCode;
+                    
+                    updateUI();
+                    updateReferralUI();
+                    
+                    if (isManualApply) {
+                        showAlert(`Referral code applied successfully! You received 100 coins.`);
+                    }
+                } else {
+                    if (isManualApply) {
+                        showAlert("Invalid referral code.");
+                    }
+                }
+            } catch(error) {
+                console.error("Error applying referral bonus: ", error);
+                if (isManualApply) {
+                    showAlert("Error applying referral code: " + error.message);
+                }
+            }
+        }
+
+        async function handleWithdrawal() {
+            const amount = parseInt(document.getElementById('withdraw-amount').value);
+            const method = document.getElementById('withdraw-method').value;
+            const paymentDetailInput = document.getElementById('payment-detail-input');
+            const paymentDetail = paymentDetailInput ? paymentDetailInput.value.trim() : '';
+            
+            const minWithdrawal = appConfig.minWithdrawal || 5000;
+            
+            if (!amount || amount <= 0) {
+                return showAlert("Kripya valid amount daalein.");
+            }
+            
+            if (amount < minWithdrawal) {
+                return showAlert(`Minimum withdrawal ${minWithdrawal} coins hai.`);
+            }
+            
+            if (amount > userData.balance) {
+                return showAlert("Insufficient balance.");
+            }
+            
+            if (!paymentDetail) {
+                return showAlert("Kripya payment detail daalein (UPI ID ya Paytm Number).");
+            }
+            
+            try {
+                await updateBalance(-amount);
+                
+                await addDoc(collection(db, "withdrawals"), {
+                    userId: currentUser.uid,
+                    userName: userData.name,
+                    userEmail: userData.email,
+                    amount: amount,
+                    method: method,
+                    paymentDetail: paymentDetail,
+                    status: "pending",
+                    requestedAt: serverTimestamp()
+                });
+                
+                await updateDoc(doc(db, "users", currentUser.uid), {
+                    totalWithdrawn: (userData.totalWithdrawn || 0) + amount
+                });
+                userData.totalWithdrawn = (userData.totalWithdrawn || 0) + amount;
+                
+                showAlert("Withdrawal request safaltapoorvak submit ho gayi hai!");
+                document.getElementById('withdraw-amount').value = '';
+                paymentDetailInput.value = '';
+                
+            } catch (error) {
+                showAlert("Request submit karne mein error: " + error.message);
+                await updateBalance(amount);
+            }
+        }
+
+        function copyReferralCode() {
+            const textToCopy = referralCodeEl.textContent;
+            const textArea = document.createElement("textarea");
+            textArea.style.position = 'fixed';
+            textArea.style.top = '-100px';
+            textArea.value = textToCopy;
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showAlert("Referral code copy ho gaya!");
+            } catch (err) {
+                showAlert("Code copy karne mein विफल.");
+            }
+            
+            document.body.removeChild(textArea);
+        }
+        
+        function shareReferralCode() {
+            const text = `FbmReward এ যুক্ত হন আর টাকা কামাও! 🎁Bonus পাওয়ার জন্য আমার referral code ব্যাবহার করো: ${userData.referralCode}`;
+            
+            if (navigator.share) {
+                navigator.share({ 
+                    title: 'FbmReward এ যুক্ত হন এবং ফ্রি ইনকাম করুণ!', 
+                    text: text, 
+                    url: window.location.href 
+                }).catch((error) => console.error("Share failed:", error));
+            } else {
+                copyReferralCode();
+                showAlert(" লিংক শেয়ার করার সুবিধা উপলব্ধ না। অনুগ্রহ করে Referral code copy করে শেয়ার করুন!");
+            }
+        }
+
+        async function handleProfileImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                return showAlert("Please select an image file.");
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+                return showAlert("Image size should be less than 5MB.");
+            }
+
+            loader.style.display = 'flex';
+            
+            try {
+                const storageRef = ref(storage, `profile-images/${currentUser.uid}`);
+                const snapshot = await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+                
+                await updateDoc(doc(db, "users", currentUser.uid), {
+                    profileImage: downloadURL
+                });
+                
+                userData.profileImage = downloadURL;
+                document.getElementById('profile-image').src = downloadURL;
+                
+                showAlert("Profile image updated successfully!");
+            } catch (error) {
+                console.error("Error uploading profile image:", error);
+                showAlert("Error uploading image: " + error.message);
+            } finally {
+                loader.style.display = 'none';
+                event.target.value = '';
+            }
+        }
+
+        window.editUserName = function() {
+            document.getElementById('new-user-name').value = userData.name || '';
+            document.getElementById('edit-name-modal').classList.remove('hidden');
+        }
+
+        window.closeEditNameModal = function() {
+            document.getElementById('edit-name-modal').classList.add('hidden');
+        }
+
+        async function saveUserName() {
+            const newName = document.getElementById('new-user-name').value.trim();
+            
+            if (!newName) {
+                return showAlert("Please enter a valid name.");
+            }
+            
+            try {
+                await updateDoc(doc(db, "users", currentUser.uid), {
+                    name: newName
+                });
+                
+                userData.name = newName;
+                profileNameEl.textContent = newName;
+                
+                showAlert("Name updated successfully!");
+                closeEditNameModal();
+            } catch (error) {
+                showAlert("Error updating name: " + error.message);
+            }
+        }
+
+        async function checkDailyStreak() {
+            const today = new Date().toISOString().split('T')[0];
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStr = yesterday.toISOString().split('T')[0];
+            
+            if (userData.lastTaskDate === yesterdayStr) {
+                const newStreak = (userData.streakCount || 0) + 1;
+                await updateDoc(doc(db, "users", currentUser.uid), { 
+                    streakCount: newStreak,
+                    lastTaskDate: today 
+                });
+                userData.streakCount = newStreak;
+                
+                if (newStreak % 7 === 0) {
+                    await updateBalance(100);
+                    showAlert(`🎉 Congratulations! ${newStreak} day streak bonus: 100 coins!`);
+                }
+            } else if (userData.lastTaskDate !== today) {
+                await updateDoc(doc(db, "users", currentUser.uid), { 
+                    streakCount: 1,
+                    lastTaskDate: today 
+                });
+                userData.streakCount = 1;
+            }
+        }
+
+        async function checkLevelUp() {
+            const currentLevel = userData.level || 1;
+            const nextLevel = currentLevel + 1;
+            
+            if (nextLevel <= 5 && userData.balance >= [0, 1000, 3000, 7000, 15000][nextLevel-1]) {
+                await updateDoc(doc(db, "users", currentUser.uid), { 
+                    level: nextLevel 
+                });
+                userData.level = nextLevel;
+                
+                const bonusAmount = [0, 50, 100, 200, 500][nextLevel-1];
+                if (bonusAmount > 0) {
+                    await updateBalance(bonusAmount);
+                    showAlert(`🎊 Level Up! You reached level ${nextLevel} and earned ${bonusAmount} coins bonus!`);
+                }
+            }
+        }
+
+        function showAlert(message) {
+            document.getElementById('alert-message').textContent = message;
+            document.getElementById('custom-alert').classList.remove('hidden');
+        }
+        window.showAlert = showAlert;
     </script>
 </body>
 </html>
