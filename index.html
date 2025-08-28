@@ -1,1546 +1,836 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fbm Reward App</title>
-    
-    <!-- Ad Code -->
-    <script src='//libtl.com/sdk.js' data-zone='9549781' data-sdk='show_9549781'></script>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #121212; color: #ffffff; }
-        .dark-bg { background-color: #121212; }
-        .card-bg { background-color: #1e1e1e; }
-        .border-accent { border-color: #ff8c00; }
-        .text-accent { color: #ff8c00; }
-        .btn, .btn-accent, .btn-outline-accent { transition: all 0.2s ease-in-out; transform: scale(1); }
-        .btn:active, .btn-accent:active, .btn-outline-accent:active { transform: scale(0.95); }
-        .btn-accent { background-color: #ff8c00; color: #121212; font-weight: bold; }
-        .btn-accent:hover { background-color: #e67e00; }
-        .btn-outline-accent { border: 1px solid #ff8c00; color: #ff8c00; }
-        .btn-outline-accent:hover { background-color: #ff8c00; color: #121212; }
-        .input-field { background-color: #2c2c2c; border: 1px solid #444; }
-        .main-page { display: none; }
-        .main-page.active { display: flex; animation: fadeIn 0.5s ease-in-out; }
-        .sub-page { display: none; }
-        .sub-page.active { display: block; animation: fadeIn 0.3s ease-in-out; }
-        .bottom-nav a.active { color: #ff8c00; }
-        .notification-dot {
-            position: absolute; top: -2px; right: -2px; width: 10px; height: 10px;
-            background-color: #ef4444; border-radius: 50%; border: 2px solid #121212; display: none;
-        }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        /* New Styles */
-        .streak-counter { 
-            background: linear-gradient(45deg, #ff8c00, #ff5500); 
-            color: white; 
-            padding: 8px 12px; 
-            border-radius: 20px; 
-            font-weight: bold; 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 5px;
-        }
-        .level-badge {
-            background: linear-gradient(45deg, #6366f1, #8b5cf6);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .progress-bar {
-            height: 6px;
-            background-color: #333;
-            border-radius: 3px;
-            overflow: hidden;
-            margin: 8px 0;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ff8c00, #ff5500);
-            border-radius: 3px;
-            transition: width 0.3s ease;
-        }
-        /* Notification animation */
-        @keyframes ring { 
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(15deg); }
-            75% { transform: rotate(-15deg); }
-        }
-        .ringing { animation: ring 0.5s ease-in-out infinite; }
-        /* Profile image */
-        .profile-image {
-            width: 96px;
-            height: 96px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #ff8c00;
-        }
-        /* Task System Styles */
-        .task-card { transition: all 0.3s ease; }
-        .task-card.disabled { opacity: 0.6; filter: grayscale(1); }
-        .task-timer {
-            background: linear-gradient(45deg, #ff8c00, #ff5500);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-weight: bold;
-        }
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-top: 56.25%; /* 16:9 Aspect Ratio */
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 8px;
-        }
-    </style>
+
+  <meta charset="UTF-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+
+  <title>Easy Earning Bot</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+
+    :root {
+
+      --primary-color: #2ed914;
+
+      --primary-hover: #3bff21;
+
+      --secondary-color: #2a2a2e;
+
+      --background-color: #1c1c1f;
+
+      --text-color: #f0f0f0;
+
+      --text-muted-color: #a0a0a0;
+
+      --accent-color: #ff8c00;
+
+      --card-bg: #252528;
+
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+
+      margin: 0; padding: 0; background-color: var(--background-color); color: var(--text-color);
+
+      font-family: 'Segoe UI', 'Roboto', sans-serif; display: flex; justify-content: center; align-items: center;
+
+      height: 100vh; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+
+    }
+
+    .container {
+
+      width: 100%; height: 100%; max-width: 400px; background: var(--background-color);
+
+      display: flex; flex-direction: column; overflow: hidden; position: relative;
+
+    }
+
+    main {
+
+      flex-grow: 1; overflow-y: auto; padding: 20px; padding-bottom: 80px; /* Space for footer nav */
+
+    }
+
+    .view { display: none; animation: fadeIn 0.4s ease-in-out; }
+
+    .view.active { display: block; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .user-header-card {
+
+      background: var(--card-bg); border-radius: 16px; padding: 15px; margin-bottom: 25px;
+
+      display: flex; align-items: center; border: 1px solid rgba(255, 255, 255, 0.05);
+
+    }
+
+    .user-avatar {
+
+      width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; overflow: hidden;
+
+      background: linear-gradient(135deg, var(--primary-color), #00a651);
+
+      display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px;
+
+    }
+
+    .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .user-info .username { font-size: 18px; font-weight: 700; margin: 0; }
+
+    .user-info .title { font-size: 14px; color: var(--text-muted-color); margin: 0; }
+
+    .balance-card {
+
+      background: linear-gradient(135deg, #00a651, #00753a); border-radius: 16px; padding: 20px;
+
+      text-align: center; margin-bottom: 25px;
+
+    }
+
+    .balance-card .label { font-size: 16px; opacity: 0.8; margin-bottom: 5px; }
+
+    .balance-card .balance-value { font-size: 36px; font-weight: 800; margin: 0; letter-spacing: 1px; }
+
+    .balance-card .points-value { font-size: 16px; font-weight: 600; color: var(--accent-color); margin-top: 10px; }
+
+    .section-title { font-size: 20px; font-weight: 700; margin-bottom: 15px; padding-left: 5px; border-left: 4px solid var(--primary-color); }
+
+    .task-card {
+
+      background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 15px;
+
+      display: flex; align-items: center; cursor: pointer; transition: transform 0.2s ease, background-color 0.2s ease;
+
+      border: 1px solid rgba(255, 255, 255, 0.05);
+
+    }
+
+    .task-card:hover { transform: translateY(-3px); background-color: var(--secondary-color); }
+
+    .task-icon { font-size: 24px; color: var(--primary-color); margin-right: 20px; width: 30px; text-align: center; }
+
+    .task-details h3 { margin: 0; font-size: 16px; font-weight: 600; }
+
+    .task-details p { margin: 3px 0 0; font-size: 13px; color: var(--text-muted-color); }
+
+    .task-arrow { margin-left: auto; font-size: 18px; color: var(--text-muted-color); }
+
+    .list-item {
+
+      display: flex; align-items: center; background: var(--card-bg); padding: 12px 15px;
+
+      border-radius: 10px; margin-bottom: 10px; border: 1px solid rgba(255, 255, 255, 0.05);
+
+    }
+
+    .list-item .rank { font-size: 16px; font-weight: 700; color: var(--text-muted-color); width: 30px; }
+
+    .list-item .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--secondary-color); margin-right: 15px; object-fit: cover; }
+
+    .list-item .info { flex-grow: 1; }
+
+    .list-item .info .name { font-weight: 600; font-size: 15px; }
+
+    .list-item .info .detail { font-size: 13px; color: var(--text-muted-color); }
+
+    .list-item .score { font-size: 16px; font-weight: 700; color: var(--accent-color); }
+
+    .history-icon { color: var(--primary-color); margin-right: 15px; font-size: 18px; }
+
+    .footer-nav {
+
+      position: fixed; bottom: 0; left: 0; right: 0; width: 100%; max-width: 400px; margin: 0 auto;
+
+      display: flex; justify-content: space-around; background: var(--secondary-color);
+
+      padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    }
+
+    .nav-button {
+
+      display: flex; flex-direction: column; align-items: center; color: var(--text-muted-color);
+
+      background: none; border: none; font-size: 12px; transition: color 0.2s ease, transform 0.2s ease;
+
+      cursor: pointer; padding: 5px 10px;
+
+    }
+
+    .nav-button .icon { font-size: 22px; margin-bottom: 4px; }
+
+    .nav-button:hover { color: var(--text-color); }
+
+    .nav-button.active { color: var(--primary-color); transform: scale(1.1); }
+
+    .action-button {
+
+      width: 100%; padding: 15px; border-radius: 12px; border: none; font-size: 16px; font-weight: 700;
+
+      margin-top: 15px; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;
+
+    }
+
+    .primary-button { background: var(--primary-color); color: #000; }
+
+    .primary-button:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(46, 217, 20, 0.3); }
+
+    .secondary-button { background: var(--secondary-color); color: var(--primary-color); }
+
+    .secondary-button:hover { background: #3a3a3e; }
+
+    .modal-overlay {
+
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7);
+
+      display: none; align-items: center; justify-content: center; z-index: 1000; animation: fadeIn 0.3s;
+
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-content {
+
+      background: var(--card-bg); padding: 25px; border-radius: 16px; width: 90%; max-width: 320px;
+
+      text-align: center; animation: slideIn 0.3s;
+
+    }
+
+    @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    .modal-content h3 { margin-top: 0; font-size: 20px; }
+
+    .modal-content p { color: var(--text-muted-color); margin-bottom: 25px; }
+
+    .modal-actions { display: flex; gap: 10px; }
+
+  </style>
+
+
+
+  <script src='//libtl.com/sdk.js' data-zone='9459352' data-sdk='show_9459352'></script>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
 </head>
-<body class="max-w-md mx-auto">
 
-    <!-- App Loader -->
-    <div id="loader" class="hidden fixed inset-0 dark-bg bg-opacity-75 flex items-center justify-center z-50">
-        <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-accent"></div>
-    </div>
+<body>
 
-    <!-- Authentication Section -->
-    <div id="auth-section" class="min-h-screen p-6 flex-col justify-center main-page active">
-        <h1 class="text-4xl font-bold text-center mb-2 text-accent">Fbm Reward</h1>
-        <p class="text-center text-gray-400 mb-8">আপনার একাউন্ট থাকলে এখানে লগইন করুন!</p>
-        <div id="auth-container">
-            <div id="login-view">
-                <input id="login-email" type="email" placeholder="Email" class="w-full p-3 rounded-lg input-field mb-4">
-                <input id="login-password" type="password" placeholder="Password" class="w-full p-3 rounded-lg input-field mb-4">
-                <button id="login-btn" class="w-full p-3 rounded-lg btn-accent mb-4">Login</button>
-                <p class="text-center text-gray-400"> একাউন্ট নাই ? <a href="#" id="show-signup" class="font-semibold text-accent">Sign Up</a></p>
-            </div>
-            <div id="signup-view" class="hidden">
-                <input id="signup-name" type="text" placeholder="Poora Naam" class="w-full p-3 rounded-lg input-field mb-4">
-                <input id="signup-email" type="email" placeholder="Email" class="w-full p-3 rounded-lg input-field mb-4">
-                <input id="signup-password" type="password" placeholder="Password" class="w-full p-3 rounded-lg input-field mb-4">
-                <input id="signup-referral" type="text" placeholder="Referral Code (Optional)" class="w-full p-3 rounded-lg input-field mb-4">
-                <button id="signup-btn" class="w-full p-3 rounded-lg btn-accent mb-4">Sign Up</button>
-                <p class="text-center text-gray-400">আগের একাউন্ট আচছে ? <a href="#" id="show-login" class="font-semibold text-accent">Login</a></p>
-            </div>
+  <div class="container">
+
+    <main id="main-content">
+
+
+
+      <!-- HOME VIEW -->
+
+      <div id="home-view" class="view active">
+
+        <div class="user-header-card">
+
+          <div class="user-avatar" id="profile-pic">EE</div>
+
+          <div class="user-info">
+
+            <h2 class="username" id="username">Loading...</h2>
+
+            <p class="title">Welcome Back!</p>
+
+          </div>
+
         </div>
+
+        <div class="balance-card">
+
+            <p class="label">Total Balance</p>
+
+            <h1 class="balance-value" id="balance-value">$0.00</h1>
+
+            <p class="points-value"><i class="fa-solid fa-coins"></i> <span id="points-value">0</span> Points</p>
+
+        </div>
+
+        <h2 class="section-title">Quick Actions</h2>
+
+        <div class="task-card" onclick="showView('tasks-view')">
+
+            <div class="task-icon"><i class="fa-solid fa-list-check"></i></div>
+
+            <div class="task-details"><h3>View Tasks</h3><p>Watch ads and complete tasks to earn points.</p></div>
+
+            <div class="task-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+
+        </div>
+
+        <div class="task-card" onclick="openWithdrawModal()">
+
+            <div class="task-icon"><i class="fa-solid fa-wallet"></i></div>
+
+            <div class="task-details"><h3>Withdraw Funds</h3><p>Request to withdraw your available balance.</p></div>
+
+            <div class="task-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- TASKS VIEW -->
+
+      <div id="tasks-view" class="view">
+
+        <h2 class="section-title">Earning Tasks</h2>
+
+        <div class="task-card" onclick="showRewardedInterstitial()">
+
+            <div class="task-icon"><i class="fa-solid fa-rectangle-ad"></i></div>
+
+            <div class="task-details"><h3>Rewarded Interstitial</h3><p>Watch a full-screen ad to earn rewards.</p></div>
+
+            <div class="task-arrow"><i class="fa-solid fa-play"></i></div>
+
+        </div>
+
+        <div class="task-card" onclick="showRewardedPopup()">
+
+            <div class="task-icon"><i class="fa-solid fa-window-restore"></i></div>
+
+            <div class="task-details"><h3>Rewarded Popup</h3><p>View a popup ad for quick points.</p></div>
+
+            <div class="task-arrow"><i class="fa-solid fa-play"></i></div>
+
+        </div>
+
+        <!-- In-App Interstitial Button Removed as it now runs automatically -->
+
+      </div>
+
+
+
+      <!-- LEADERBOARD VIEW -->
+
+      <div id="leaderboard-view" class="view">
+
+        <h2 class="section-title">Top Earners</h2>
+
+        <div id="leaderboard-list"><!-- Leaderboard items will be generated here by JS --></div>
+
+      </div>
+
+
+
+      <!-- HISTORY VIEW -->
+
+      <div id="history-view" class="view">
+
+        <h2 class="section-title">Recent Activity</h2>
+
+        <div id="history-list"><!-- History items will be generated here by JS --></div>
+
+      </div>
+
+
+
+    </main>
+
+
+
+    <nav class="footer-nav">
+
+      <button class="nav-button active" onclick="showView('home-view')"><i class="icon fa-solid fa-house"></i>Home</button>
+
+      <button class="nav-button" onclick="showView('tasks-view')"><i class="icon fa-solid fa-list-check"></i>Tasks</button>
+
+      <button class="nav-button" onclick="showView('leaderboard-view')"><i class="icon fa-solid fa-trophy"></i>Leaders</button>
+
+      <button class="nav-button" onclick="showView('history-view')"><i class="icon fa-solid fa-clock-rotate-left"></i>History</button>
+
+      <button class="nav-button" onclick="shareApp()"><i class="icon fa-solid fa-share-nodes"></i>Share</button>
+
+    </nav>
+
+  </div>
+
+  
+
+  <!-- WITHDRAWAL MODAL -->
+
+  <div class="modal-overlay" id="withdraw-modal">
+
+    <div class="modal-content">
+
+        <h3>Confirm Withdrawal</h3>
+
+        <p>You are about to request a withdrawal of your entire balance. Please confirm.</p>
+
+        <div class="modal-actions">
+
+            <button class="action-button secondary-button" onclick="closeWithdrawModal()">Cancel</button>
+
+            <button class="action-button primary-button" onclick="requestWithdraw()">Confirm</button>
+
+        </div>
+
     </div>
 
-    <!-- Main App Container -->
-    <div id="app-container" class="min-h-screen flex-col main-page">
-        <header class="flex items-center justify-between p-4 sticky top-0 bg-opacity-80 backdrop-blur-md z-10 dark-bg">
-            <h1 class="text-xl font-bold">Fbm Reward</h1>
-            <div class="flex items-center space-x-4">
-                <div class="streak-counter" id="streak-counter" style="display: none;">
-                    <i data-lucide="flame" class="w-4 h-4"></i>
-                    <span id="streak-days">0</span> দিন
-                </div>
-                <div id="notification-bell" class="relative cursor-pointer">
-                    <i data-lucide="bell" class="w-6 h-6"></i>
-                    <div id="notification-dot" class="notification-dot"></div>
-                </div>
-                <i data-lucide="user" class="w-6 h-6 cursor-pointer" onclick="navigateTo('profile-page')"></i>
-            </div>
-        </header>
+  </div>
 
-        <main class="flex-grow">
-            <!-- Home Page -->
-            <div id="home-page" class="p-4 space-y-6 sub-page active">
-                <div class="card-bg p-4 rounded-lg flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-400 text-sm">Your Balance</p>
-                        <p class="text-3xl font-bold"><span id="coin-balance">0</span> Coins</p>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="level-badge" id="user-level">Lvl 1</span>
-                            <div class="progress-bar w-20">
-                                <div class="progress-fill" id="level-progress" style="width: 0%"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <button id="home-withdraw-btn" class="bg-white text-black font-semibold px-6 py-2 rounded-lg">Withdraw</button>
-                </div>
-                
-                <section>
-                    <div class="flex justify-between items-center mb-4">
-                        <div>
-                            <h2 class="text-lg font-semibold">Available Tasks</h2>
-                            <p class="text-sm text-gray-400">Complete tasks to earn coins</p>
-                        </div>
-                        <div id="tasks-loading" class="text-sm text-gray-400">Loading...</div>
-                    </div>
-                    
-                    <div id="tasks-container" class="space-y-3">
-                        <!-- Tasks will be loaded dynamically from admin -->
-                    </div>
-                </section>
-            </div>
 
-            <!-- Wallet Page -->
-            <div id="wallet-page" class="p-4 space-y-6 sub-page">
-                <h2 class="text-xl font-bold text-center">My Wallet</h2>
-                <div class="card-bg p-4 rounded-lg">
-                    <h3 class="font-semibold mb-3"> Withdraw Now </h3>
-                    <p class="text-sm text-gray-400 mb-1">Current Balance: <span class="font-bold text-accent"><span id="wallet-coin-balance">0</span> Coins</span></p>
-                    <p class="text-sm text-gray-400 mb-2">Minimum Withdrawal: <span id="min-withdrawal-info">...</span> Coins</p>
-                    <p class="text-sm text-gray-400 mb-4 font-semibold" id="coin-value-info">...</p>
-                    <input id="withdraw-amount" type="number" placeholder="Coin amount daalein" class="w-full p-3 rounded-lg input-field mb-3">
-                    <select id="withdraw-method" class="w-full p-3 rounded-lg input-field mb-3"></select>
-                    <div id="payment-details-container"></div>
-                    <button id="withdraw-btn" class="w-full p-3 rounded-lg btn-accent mt-3">Request Withdrawal</button>
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold mb-3">Withdrawal History</h3>
-                    <div id="withdrawal-history-list" class="space-y-3"></div>
-                </div>
-            </div>
 
-            <!-- Refer Page -->
-            <div id="refer-page" class="p-4 space-y-6 sub-page">
-                 <h2 class="text-xl font-bold text-center">Refer & Earn</h2>
-                 <div class="card-bg p-6 rounded-lg text-center">
-                     <p class="text-gray-400 mb-2"> আপনার রেফার কোড</p>
-                     <div class="bg-gray-800 p-3 rounded-lg flex items-center justify-center mb-4">
-                         <span id="referral-code" class="text-2xl font-bold tracking-widest">LOADING...</span>
-                         <button id="copy-code-btn" class="ml-4"><i data-lucide="copy" class="w-6 h-6 text-gray-400"></i></button>
-                     </div>
-                     <p class="text-sm text-gray-300"> আপনার বন্দধুদের সাথে সেয়ার করুন এবং অতিরিক্ত উপার্জন করুন।</p>
-                 </div>
-                 <button id="share-btn" class="w-full p-3 rounded-lg btn-accent"> আপনার লিনংক শেয়ার করুন...</button>
-                 
-                 <div id="referral-input-section" class="card-bg p-4 rounded-lg mt-6">
-                    <h3 class="font-semibold mb-3 text-center">কারর রেফার কোড আছে ?</h3>
-                    <input id="enter-referral-code" type="text" placeholder="কোড এখানে দিন!" class="w-full p-3 rounded-lg input-field mb-3">
-                    <button id="apply-referral-btn" class="w-full p-3 rounded-lg btn-outline-accent">কোড এপ্লাই করুণন..</button>
-                 </div>
 
-                 <div id="referral-used-section" class="card-bg p-4 rounded-lg mt-6 hidden">
-                    <h3 class="font-semibold mb-3 text-center text-green-400">✅ রেফারেল কোড ব্যবহৃত হয়েছে</h3>
-                    <p class="text-center text-gray-300">আপনি ইতিমধ্যেই একটি রেফারেল কোড ব্যবহার করেছেন এবং <span id="referral-bonus-amount">100</span> কয়েন বোনাস পেয়েছেন!</p>
-                 </div>
-                 
-                 <div class="card-bg p-4 rounded-lg">
-                    <h3 class="font-semibold mb-3 text-center">রেফারেল স্ট্যাটাস</h3>
-                    <div class="grid grid-cols-2 gap-4 text-center">
-                        <div class="bg-gray-800 p-3 rounded-lg">
-                            <p class="text-2xl font-bold" id="total-referrals">0</p>
-                            <p class="text-sm text-gray-400">মোট রেফারেল</p>
-                        </div>
-                        <div class="bg-gray-800 p-3 rounded-lg">
-                            <p class="text-2xl font-bold" id="referral-earnings">0</p>
-                            <p class="text-sm text-gray-400">মোট আয়</p>
-                        </div>
-                    </div>
-                 </div>
-            </div>
 
-            <!-- Profile Page -->
-            <div id="profile-page" class="p-4 space-y-6 sub-page">
-                <h2 class="text-xl font-bold text-center mb-4">Profile</h2>
-                
-                <div class="flex flex-col items-center">
-                    <div class="relative">
-                        <img id="profile-image" src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=" class="profile-image">
-                        <label for="profile-image-upload" class="absolute bottom-0 right-0 bg-accent text-white p-2 rounded-full cursor-pointer">
-                            <i data-lucide="camera" class="w-4 h-4"></i>
-                        </label>
-                        <input type="file" id="profile-image-upload" accept="image/*" class="hidden">
-                    </div>
-                    
-                    <div class="mt-4 text-center">
-                        <h2 id="profile-name" class="text-xl font-bold mb-1">User Name</h2>
-                        <button onclick="editUserName()" class="text-accent text-sm flex items-center justify-center mx-auto">
-                            <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit Name
-                        </button>
-                    </div>
-                    
-                    <p id="profile-email" class="text-gray-400 mt-2">user@email.com</p>
-                    
-                    <div class="flex gap-2 mt-2">
-                        <span class="level-badge" id="profile-level">Lvl 1</span>
-                        <div class="streak-counter" id="profile-streak">
-                            <i data-lucide="flame" class="w-4 h-4"></i>
-                            <span>0</span> দিন
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card-bg p-4 rounded-lg">
-                    <h3 class="font-semibold mb-3">Account Stats</h3>
-                    <div class="space-y-2">
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Member Since</span>
-                            <span id="member-since">-</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Tasks Completed</span>
-                            <span id="tasks-completed">0</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Total Earned</span>
-                            <span id="total-earned">0 coins</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Total Withdrawn</span>
-                            <span id="total-withdrawn">0 coins</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <button id="logout-btn" class="w-full mt-6 p-3 rounded-lg bg-red-600 text-white font-bold">⚙ Logout</button>
-            </div>
-            
-            <!-- Notifications Page -->
-            <div id="notifications-page" class="p-4 space-y-4 sub-page">
-                <h2 class="text-xl font-bold text-center">Notifications</h2>
-                <div id="notifications-list" class="space-y-3"></div>
-            </div>
+<script>
 
-            <!-- Task Modal Templates -->
-            <div id="group-join-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                <div class="bg-gray-800 rounded-lg p-6 w-full max-w-sm text-center">
-                    <h2 class="text-lg font-bold mb-4" id="group-join-title">Join Group</h2>
-                    <div class="task-timer mx-auto mb-4" id="group-join-timer">5s</div>
-                    <p class="text-sm text-gray-300 mb-4">Please wait while we redirect you...</p>
-                    <div class="flex space-x-4">
-                        <button onclick="closeGroupJoinModal()" class="flex-1 p-3 rounded-lg bg-gray-600 text-white">Cancel</button>
-                        <button id="group-join-open-btn" class="flex-1 p-3 rounded-lg btn-accent">Open Group</button>
-                    </div>
-                </div>
-            </div>
+    // --- State Variables ---
 
-            <div id="video-watch-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                <div class="bg-gray-800 rounded-lg p-6 w-full max-w-md">
-                    <h2 class="text-lg font-bold mb-4" id="video-watch-title">Watch Video</h2>
-                    
-                    <div class="video-container mb-4">
-                        <iframe id="video-player" src="" frameborder="0" allowfullscreen></iframe>
-                    </div>
-                    
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="task-timer" id="video-watch-timer">0s</div>
-                        <div class="text-sm text-gray-300" id="video-progress">0% Complete</div>
-                    </div>
-                    
-                    <div class="progress-bar bg-gray-600 mb-4">
-                        <div class="progress-fill" id="video-progress-bar" style="width: 0%"></div>
-                    </div>
-                    
-                    <div class="flex space-x-4">
-                        <button onclick="closeVideoModal()" class="flex-1 p-3 rounded-lg bg-gray-600 text-white">Cancel</button>
-                        <button id="video-complete-btn" class="flex-1 p-3 rounded-lg btn-accent" disabled>Complete</button>
-                    </div>
-                </div>
-            </div>
+    let points = 0;
 
-            <!-- Edit Name Modal -->
-            <div id="edit-name-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                <div class="bg-gray-800 rounded-lg p-6 w-full max-w-sm">
-                    <h2 class="text-lg font-bold mb-4">Edit Name</h2>
-                    <input type="text" id="new-user-name" class="w-full p-3 rounded-lg input-field mb-4" placeholder="Enter new name">
-                    <div class="flex space-x-4">
-                        <button onclick="closeEditNameModal()" class="flex-1 p-3 rounded-lg bg-gray-600 text-white">Cancel</button>
-                        <button onclick="saveUserName()" class="flex-1 p-3 rounded-lg btn-accent">Save</button>
-                    </div>
-                </div>
-            </div>
-        </main>
+    let balance = 0.00;
 
-        <nav class="bottom-nav sticky bottom-0 grid grid-cols-4 items-center text-center py-2 card-bg">
-            <a href="#" class="nav-link active" data-page="home-page"><i data-lucide="home" class="mx-auto w-6 h-6"></i><span class="text-xs">Home</span></a>
-            <a href="#" class="nav-link" data-page="wallet-page"><i data-lucide="wallet" class="mx-auto w-6 h-6"></i><span class="text-xs">Wallet</span></a>
-            <a href="#" class="nav-link" data-page="refer-page"><i data-lucide="users" class="mx-auto w-6 h-6"></i><span class="text-xs">Refer & Earn</span></a>
-            <a href="#" class="nav-link" data-page="profile-page"><i data-lucide="user" class="mx-auto w-6 h-6"></i><span class="text-xs">Profile</span></a>
-        </nav>
-    </div>
+    let historyLog = [];
+
+    let tgUser = null;
+
+    const pointsPerAd = 1;
+
+    const ratePerPoint = 0.05;
+
+
+
+    // --- Core App Logic ---
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        initApp();
+
+    });
+
+
+
+    function initApp() {
+
+        if (window.Telegram && Telegram.WebApp) {
+
+            Telegram.WebApp.ready();
+
+            Telegram.WebApp.expand();
+
+            tgUser = Telegram.WebApp.initDataUnsafe.user;
+
+        }
+
+        
+
+        loadData();
+
+        loadTelegramUser();
+
+        showView('home-view');
+
+        renderLeaderboard();
+
+        
+
+        // <<< === ADDED AUTOMATIC IN-APP ADS INITIALIZATION HERE === >>>
+
+        initializeInAppAds();
+
+    }
+
     
-    <div id="custom-alert" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-gray-800 rounded-lg p-6 w-full max-w-sm text-center">
-            <p id="alert-message" class="mb-4"></p>
-            <button id="alert-ok-btn" class="btn-accent px-6 py-2 rounded-lg">OK</button>
-        </div>
-    </div>
 
-    <!-- Notification Sound Element -->
-    <audio id="notification-sound" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-positive-notification-951.mp3" type="audio/mpeg">
-    </audio>
+    // --- Initialize Automatic Ads ---
 
-    <script type="module">
-        const firebaseConfig = {
-            apiKey: "AIzaSyCF55eWqzmeFsqC6ToG_44f7e4SRtmBs3E",
-            authDomain: "fbmads-d5f34.firebaseapp.com",
-            projectId: "fbmads-d5f34",
-            storageBucket: "fbmads-d5f34.firebasestorage.app",
-            messagingSenderId: "610212357407",
-            appId: "1:610212357407:web:ea5d7d153391a576befc2a"
-        };
+    function initializeInAppAds() {
+
+        if (typeof show_9459352 === 'function') {
+
+            // In-App Interstitial - runs automatically in the background
+
+            show_9459352({
+
+              type: 'inApp',
+
+              inAppSettings: {
+
+                frequency: 2,
+
+                capping: 0.1,
+
+                interval: 30,
+
+                timeout: 5,
+
+                everyPage: false // `false` is important for single-page apps like this
+
+              }
+
+            });
+
+            console.log("Automatic In-App Interstitial Ads Initialized.");
+
+        } else {
+
+            console.warn("Monetag SDK not ready for In-App Ads. Retrying...");
+
+            setTimeout(initializeInAppAds, 2000); // Retry after 2 seconds if SDK is not loaded yet
+
+        }
+
+    }
+
+
+
+    // --- View Management ---
+
+    function showView(viewId) {
+
+        document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+
+        document.getElementById(viewId).classList.add('active');
+
         
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit, increment } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
+        document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
 
-        let currentUser = null;
-        let userData = null;
-        let appConfig = {};
-        let taskConfig = {};
-        let currentTasks = {};
-        let activeTimers = {};
+        const activeBtn = document.querySelector(`.nav-button[onclick="showView('${viewId}')"]`);
 
-        const loader = document.getElementById('loader');
-        const coinBalanceEl = document.getElementById('coin-balance');
-        const walletCoinBalanceEl = document.getElementById('wallet-coin-balance');
-        const profileNameEl = document.getElementById('profile-name');
-        const profileEmailEl = document.getElementById('profile-email');
-        const referralCodeEl = document.getElementById('referral-code');
-        const minWithdrawalInfoEl = document.getElementById('min-withdrawal-info');
-        const coinValueInfoEl = document.getElementById('coin-value-info');
-        const withdrawMethodSelect = document.getElementById('withdraw-method');
-        const notificationDot = document.getElementById('notification-dot');
-        const adsLeftCountEl = document.getElementById('ads-left-count');
-        const paymentDetailsContainer = document.getElementById('payment-details-container');
-        const streakCounterEl = document.getElementById('streak-counter');
-        const streakDaysEl = document.getElementById('streak-days');
-        const userLevelEl = document.getElementById('user-level');
-        const levelProgressEl = document.getElementById('level-progress');
-        const totalReferralsEl = document.getElementById('total-referrals');
-        const referralEarningsEl = document.getElementById('referral-earnings');
-        const tasksContainerEl = document.getElementById('tasks-container');
-        const tasksLoadingEl = document.getElementById('tasks-loading');
-        const notificationBell = document.getElementById('notification-bell');
-        const notificationSound = document.getElementById('notification-sound');
-        const referralInputSection = document.getElementById('referral-input-section');
-        const referralUsedSection = document.getElementById('referral-used-section');
-        const referralBonusAmountEl = document.getElementById('referral-bonus-amount');
+        if(activeBtn) activeBtn.classList.add('active');
 
-        window.onload = () => {
-            lucide.createIcons();
-            setupEventListeners();
-            showMainPage('auth-section');
-            loader.style.display = 'none';
-            onAuthStateChanged(auth, handleAuthStateChange);
-        };
-
-        async function handleAuthStateChange(user) {
-            if (user) {
-                loader.style.display = 'flex';
-                currentUser = user;
-                await fetchUserData();
-                
-                if (userData.isBlocked) {
-                    showAlert("তোমার অ্যাকাউন্ট ব্লক করা হয়েছে।");
-                    await signOut(auth);
-                    loader.style.display = 'none';
-                    return;
-                }
-                
-                await fetchAllConfigs();
-                await checkNewNotifications();
-                await checkDailyStreak();
-                await checkLevelUp();
-                updateUI();
-                showMainPage('app-container');
-                navigateTo('home-page');
-                loader.style.display = 'none';
-            } else {
-                currentUser = null;
-                userData = null;
-                showMainPage('auth-section');
-            }
-        }
-
-        async function fetchAllConfigs() {
-            await fetchAppConfig();
-            await fetchTaskConfig();
-        }
-
-        async function fetchUserData() {
-            if (!currentUser) return;
-            const userRef = doc(db, "users", currentUser.uid);
-            try {
-                const userSnap = await getDoc(userRef);
-                if (userSnap.exists()) {
-                    userData = userSnap.data();
-                    if (userData.profileImage) {
-                        document.getElementById('profile-image').src = userData.profileImage;
-                    }
-                } else {
-                    await createNewUser(userRef);
-                }
-            } catch (error) {
-                console.error("Error fetching user data:", error);
-                showAlert("User data load karne mein error aayi.");
-            }
-        }
-
-        async function createNewUser(userRef) {
-            const ownReferralCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-            const referralCode = document.getElementById('signup-referral').value.trim().toUpperCase();
-            
-            const defaultUserData = {
-                uid: currentUser.uid,
-                name: currentUser.email.split('@')[0],
-                email: currentUser.email,
-                balance: 50,
-                referralCode: ownReferralCode,
-                referredBy: referralCode || null,
-                lastNotificationCheck: new Date(),
-                createdAt: serverTimestamp(),
-                dailyAdCount: 0,
-                lastAdWatchDate: new Date().toISOString().split('T')[0],
-                isBlocked: false,
-                level: 1,
-                experience: 0,
-                streakCount: 0,
-                lastTaskDate: null,
-                totalTasksCompleted: 0,
-                totalEarned: 0,
-                totalWithdrawn: 0,
-                profileImage: "https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=",
-                devices: []
-            };
-            
-            await setDoc(userRef, defaultUserData);
-            userData = defaultUserData;
-
-            if (referralCode) {
-                await applyReferralBonus(referralCode, false);
-            }
-        }
-
-        async function fetchAppConfig() {
-            const configRef = doc(db, "config", "main");
-            try {
-                const configSnap = await getDoc(configRef);
-                appConfig = configSnap.exists() ? configSnap.data() : { 
-                    minWithdrawal: 5000, 
-                    paymentMethods: ["UPI", "Paytm"], 
-                    dailyAdLimit: 10, 
-                    coinValueCoins: 1000, 
-                    coinValueInr: 10,
-                    dailyLoginBonus: 25,
-                    maintenanceMode: false,
-                    registrationEnabled: true
-                };
-            } catch (error) {
-                console.error("Error fetching app config:", error);
-            }
-        }
-
-        async function fetchTaskConfig() {
-            try {
-                const tasksQuery = query(collection(db, "tasks"), where("enabled", "==", true), orderBy("order", "asc"));
-                const querySnapshot = await getDocs(tasksQuery);
-                
-                currentTasks = {};
-                querySnapshot.forEach(doc => {
-                    currentTasks[doc.id] = doc.data();
-                });
-                
-                renderTasks();
-            } catch (error) {
-                console.error("Error fetching tasks:", error);
-                loadDefaultTasks();
-            }
-        }
-
-        async function loadDefaultTasks() {
-            currentTasks = {
-                watch_ads: {
-                    title: "Watch Ads",
-                    type: "watch_ads",
-                    enabled: true,
-                    reward: 50,
-                    global_limit: 1000,
-                    current_count: 0,
-                    timer_seconds: 0,
-                    video_seconds: 0,
-                    order: 1,
-                    created_at: serverTimestamp()
-                },
-                group_join: {
-                    title: "Join Group",
-                    type: "group_join", 
-                    enabled: true,
-                    reward: 100,
-                    global_limit: 500,
-                    current_count: 0,
-                    timer_seconds: 5,
-                    video_seconds: 0,
-                    order: 2,
-                    created_at: serverTimestamp()
-                },
-                watch_video: {
-                    title: "Watch Video",
-                    type: "watch_video",
-                    enabled: true,
-                    reward: 80,
-                    global_limit: 800,
-                    current_count: 0,
-                    timer_seconds: 0,
-                    video_seconds: 30,
-                    order: 3,
-                    created_at: serverTimestamp()
-                }
-            };
-            renderTasks();
-        }
-
-        function renderTasks() {
-            tasksContainerEl.innerHTML = '';
-            tasksLoadingEl.textContent = Object.keys(currentTasks).length + ' tasks available';
-            
-            if (Object.keys(currentTasks).length === 0) {
-                tasksContainerEl.innerHTML = `
-                    <div class="card-bg p-6 text-center">
-                        <p class="text-gray-400">No tasks available at the moment.</p>
-                        <p class="text-sm text-gray-500 mt-2">Please check back later for new tasks.</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            for (const [taskId, task] of Object.entries(currentTasks)) {
-                if (!task.enabled) continue;
-                
-                let taskCard = '';
-                const isAvailable = task.current_count < task.global_limit;
-                
-                switch(task.type) {
-                    case 'watch_ads':
-                        taskCard = createWatchAdsCard(taskId, task, isAvailable);
-                        break;
-                    case 'group_join':
-                        taskCard = createGroupJoinCard(taskId, task, isAvailable);
-                        break;
-                    case 'watch_video':
-                        taskCard = createWatchVideoCard(taskId, task, isAvailable);
-                        break;
-                }
-                
-                tasksContainerEl.innerHTML += taskCard;
-            }
-        }
-
-        function createWatchAdsCard(taskId, task, isAvailable) {
-            return `
-                <div class="task-card card-bg p-4 rounded-lg flex items-center justify-between ${!isAvailable ? 'disabled' : ''}">
-                    <div class="flex items-center space-x-3">
-                        <span class="text-3xl">📺</span>
-                        <div>
-                            <h3 class="font-semibold">${task.title}</h3>
-                            <p class="text-xs text-gray-400">Watch advertisement and earn coins</p>
-                            ${!isAvailable ? '<p class="text-xs text-red-400 mt-1">Limit reached</p>' : ''}
-                        </div>
-                    </div>
-                    <button class="bg-white text-black font-semibold px-4 py-2 rounded-lg text-sm btn" 
-                            onclick="startTask('${taskId}')" 
-                            ${!isAvailable ? 'disabled' : ''}>
-                        Earn ${task.reward}
-                    </button>
-                </div>
-            `;
-        }
-
-        function createGroupJoinCard(taskId, task, isAvailable) {
-            return `
-                <div class="task-card card-bg p-4 rounded-lg flex items-center justify-between ${!isAvailable ? 'disabled' : ''}">
-                    <div class="flex items-center space-x-3">
-                        <span class="text-3xl">👥</span>
-                        <div>
-                            <h3 class="font-semibold">${task.title}</h3>
-                            <p class="text-xs text-gray-400">Join our community group</p>
-                            ${!isAvailable ? '<p class="text-xs text-red-400 mt-1">Limit reached</p>' : ''}
-                        </div>
-                    </div>
-                    <button class="bg-green-500 text-white font-semibold px-4 py-2 rounded-lg text-sm btn" 
-                            onclick="startGroupJoinTask('${taskId}')" 
-                            ${!isAvailable ? 'disabled' : ''}>
-                        Earn ${task.reward}
-                    </button>
-                </div>
-            `;
-        }
-
-        function createWatchVideoCard(taskId, task, isAvailable) {
-            return `
-                <div class="task-card card-bg p-4 rounded-lg flex items-center justify-between ${!isAvailable ? 'disabled' : ''}">
-                    <div class="flex items-center space-x-3">
-                        <span class="text-3xl">🎬</span>
-                        <div>
-                            <h3 class="font-semibold">${task.title}</h3>
-                            <p class="text-xs text-gray-400">Watch video for ${task.video_seconds} seconds</p>
-                            ${!isAvailable ? '<p class="text-xs text-red-400 mt-1">Limit reached</p>' : ''}
-                        </div>
-                    </div>
-                    <button class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg text-sm btn" 
-                            onclick="startWatchVideoTask('${taskId}')" 
-                            ${!isAvailable ? 'disabled' : ''}>
-                        Earn ${task.reward}
-                    </button>
-                </div>
-            `;
-        }
-
-        window.startTask = async function(taskId) {
-            const task = currentTasks[taskId];
-            if (!task || task.current_count >= task.global_limit) {
-                return showAlert("This task is no longer available.");
-            }
-
-            switch(task.type) {
-                case 'watch_ads':
-                    await claimReward('interstitial');
-                    break;
-                case 'group_join':
-                    startGroupJoinTask(taskId);
-                    break;
-                case 'watch_video':
-                    startWatchVideoTask(taskId);
-                    break;
-            }
-        }
-
-        window.startGroupJoinTask = function(taskId) {
-            const task = currentTasks[taskId];
-            if (!task || task.current_count >= task.global_limit) {
-                return showAlert("This task is no longer available.");
-            }
-
-            document.getElementById('group-join-title').textContent = task.title;
-            document.getElementById('group-join-timer').textContent = task.timer_seconds + 's';
-            document.getElementById('group-join-modal').classList.remove('hidden');
-            
-            let timeLeft = task.timer_seconds;
-            const timerElement = document.getElementById('group-join-timer');
-            const openBtn = document.getElementById('group-join-open-btn');
-            
-            openBtn.disabled = true;
-            
-            const timerInterval = setInterval(() => {
-                timeLeft--;
-                timerElement.textContent = timeLeft + 's';
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    openBtn.disabled = false;
-                    timerElement.textContent = 'Ready!';
-                }
-            }, 1000);
-            
-            activeTimers.groupJoin = timerInterval;
-            
-            openBtn.onclick = () => {
-                clearInterval(activeTimers.groupJoin);
-                completeGroupJoinTask(taskId);
-            };
-        }
-
-        window.closeGroupJoinModal = function() {
-            document.getElementById('group-join-modal').classList.add('hidden');
-            if (activeTimers.groupJoin) {
-                clearInterval(activeTimers.groupJoin);
-            }
-        }
-
-        async function completeGroupJoinTask(taskId) {
-            const task = currentTasks[taskId];
-            if (!task) return;
-            
-            try {
-                await updateDoc(doc(db, "tasks", taskId), {
-                    current_count: increment(1)
-                });
-                
-                await updateBalance(task.reward);
-                
-                await updateDoc(doc(db, "users", currentUser.uid), {
-                    totalTasksCompleted: increment(1),
-                    lastTaskDate: new Date().toISOString().split('T')[0]
-                });
-                
-                showAlert(`🎉 You earned ${task.reward} coins for joining the group!`);
-                closeGroupJoinModal();
-                
-                await fetchTaskConfig();
-                
-            } catch (error) {
-                console.error("Error completing group join task:", error);
-                showAlert("Error completing task: " + error.message);
-            }
-        }
-
-        window.startWatchVideoTask = function(taskId) {
-            const task = currentTasks[taskId];
-            if (!task || task.current_count >= task.global_limit) {
-                return showAlert("This task is no longer available.");
-            }
-
-            document.getElementById('video-watch-title').textContent = task.title;
-            document.getElementById('video-watch-timer').textContent = '0s';
-            document.getElementById('video-progress').textContent = '0% Complete';
-            document.getElementById('video-progress-bar').style.width = '0%';
-            document.getElementById('video-complete-btn').disabled = true;
-            
-            const videoPlayer = document.getElementById('video-player');
-            videoPlayer.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0";
-            
-            document.getElementById('video-watch-modal').classList.remove('hidden');
-            
-            let timeWatched = 0;
-            const totalTime = task.video_seconds;
-            const timerElement = document.getElementById('video-watch-timer');
-            const progressElement = document.getElementById('video-progress');
-            const progressBar = document.getElementById('video-progress-bar');
-            const completeBtn = document.getElementById('video-complete-btn');
-            
-            const progressInterval = setInterval(() => {
-                timeWatched++;
-                const progress = (timeWatched / totalTime) * 100;
-                
-                timerElement.textContent = timeWatched + 's';
-                progressElement.textContent = Math.min(progress, 100).toFixed(0) + '% Complete';
-                progressBar.style.width = Math.min(progress, 100) + '%';
-                
-                if (timeWatched >= totalTime) {
-                    clearInterval(progressInterval);
-                    completeBtn.disabled = false;
-                }
-            }, 1000);
-            
-            activeTimers.videoWatch = progressInterval;
-            
-            completeBtn.onclick = () => {
-                clearInterval(activeTimers.videoWatch);
-                completeWatchVideoTask(taskId);
-            };
-        }
-
-        window.closeVideoModal = function() {
-            document.getElementById('video-watch-modal').classList.add('hidden');
-            if (activeTimers.videoWatch) {
-                clearInterval(activeTimers.videoWatch);
-            }
-            
-            const videoPlayer = document.getElementById('video-player');
-            videoPlayer.src = "";
-        }
-
-        async function completeWatchVideoTask(taskId) {
-            const task = currentTasks[taskId];
-            if (!task) return;
-            
-            try {
-                await updateDoc(doc(db, "tasks", taskId), {
-                    current_count: increment(1)
-                });
-                
-                await updateBalance(task.reward);
-                
-                await updateDoc(doc(db, "users", currentUser.uid), {
-                    totalTasksCompleted: increment(1),
-                    lastTaskDate: new Date().toISOString().split('T')[0]
-                });
-                
-                showAlert(`🎉 You earned ${task.reward} coins for watching the video!`);
-                closeVideoModal();
-                
-                await fetchTaskConfig();
-                
-            } catch (error) {
-                console.error("Error completing video task:", error);
-                showAlert("Error completing task: " + error.message);
-            }
-        }
-
-        window.claimReward = async function(taskType) {
-            const today = new Date().toISOString().split('T')[0];
-            const userRef = doc(db, "users", currentUser.uid);
-
-            if (userData.lastAdWatchDate !== today) {
-                await updateDoc(userRef, { 
-                    dailyAdCount: 0, 
-                    lastAdWatchDate: today 
-                });
-                userData.dailyAdCount = 0;
-                userData.lastAdWatchDate = today;
-            }
-
-            if (userData.dailyAdCount >= (appConfig.dailyAdLimit || 10)) {
-                return showAlert("আপনার আজকের Ads দেখা সম্পূর্ণ হয়েছে।");
-            }
-            
-            if (typeof window.show_9549781 !== 'function') {
-                return showAlert("Ad service এখন উপলব্ধ না। অনুগ্রহ করে পরে চেষ্টা করুন।");
-            }
-            
-            let adPromise;
-            switch(taskType) {
-                case 'interstitial':
-                    adPromise = window.show_9549781();
-                    break;
-                case 'popup':
-                    adPromise = window.show_9549781('pop');
-                    break;
-                case 'inApp':
-                    adPromise = window.show_9549781({ type: 'inApp', inAppSettings: { frequency: 2, capping: 0.1, interval: 30, timeout: 5, everyPage: false } });
-                    break;
-                case 'miniApp':
-                    adPromise = window.show_9549781();
-                    break;
-                default:
-                    return;
-            }
-
-            adPromise.then(async () => {
-                const newCount = (userData.dailyAdCount || 0) + 1;
-                await updateDoc(userRef, { 
-                    dailyAdCount: newCount,
-                    lastTaskDate: today,
-                    totalTasksCompleted: (userData.totalTasksCompleted || 0) + 1
-                });
-                
-                userData.dailyAdCount = newCount;
-                userData.lastTaskDate = today;
-                userData.totalTasksCompleted = (userData.totalTasksCompleted || 0) + 1;
-                
-                const rewardAmount = 50;
-                
-                if (rewardAmount > 0) {
-                    await updateBalance(rewardAmount);
-                    showAlert(`🎉 অভিনন্দন আপনি ${rewardAmount} Coins জিতেছেন।`);
-                }
-                
-                updateAdsLeftCount();
-                updateProfileStats();
-                
-            }).catch(e => {
-                console.error("Ad error:", e);
-                showAlert('দুঃখিত এডস দেখানো সম্ভব না।');
-            });
-        }
-
-        async function updateBalance(amount) {
-            if (!currentUser) return;
-            
-            const newBalance = (userData.balance || 0) + amount;
-            const userRef = doc(db, "users", currentUser.uid);
-            
-            await updateDoc(userRef, { 
-                balance: newBalance,
-                totalEarned: (userData.totalEarned || 0) + (amount > 0 ? amount : 0)
-            });
-            
-            userData.balance = newBalance;
-            
-            if (amount > 0) {
-                userData.totalEarned = (userData.totalEarned || 0) + amount;
-            }
-            
-            updateUI();
-        }
-
-        function updateUI() {
-            if (!userData) return;
-            
-            const balance = userData.balance || 0;
-            coinBalanceEl.textContent = balance;
-            walletCoinBalanceEl.textContent = balance;
-            
-            profileNameEl.textContent = userData.name || 'No Name';
-            profileEmailEl.textContent = userData.email || 'No Email';
-            
-            referralCodeEl.textContent = userData.referralCode || '...';
-            minWithdrawalInfoEl.textContent = `${appConfig.minWithdrawal || 5000} Coins`;
-            coinValueInfoEl.textContent = `${appConfig.coinValueCoins || 1000} Coins = ৳${appConfig.coinValueInr || 10}`;
-            
-            withdrawMethodSelect.innerHTML = '';
-            (appConfig.paymentMethods || []).forEach(method => {
-                const option = document.createElement('option');
-                option.value = method;
-                option.textContent = method;
-                withdrawMethodSelect.appendChild(option);
-            });
-            
-            updateDynamicPaymentFields();
-            updateAdsLeftCount();
-            updateStreakDisplay();
-            updateLevelDisplay();
-            updateReferralStats();
-            updateProfileStats();
-        }
-
-        function updateProfileStats() {
-            document.getElementById('tasks-completed').textContent = userData.totalTasksCompleted || 0;
-            document.getElementById('total-earned').textContent = `${userData.totalEarned || 0} coins`;
-            document.getElementById('total-withdrawn').textContent = `${userData.totalWithdrawn || 0} coins`;
-            
-            if (userData.createdAt) {
-                const joinDate = userData.createdAt.toDate();
-                document.getElementById('member-since').textContent = joinDate.toLocaleDateString();
-            }
-        }
-
-        function updateStreakDisplay() {
-            if (userData.streakCount > 0) {
-                streakCounterEl.style.display = 'inline-flex';
-                streakDaysEl.textContent = userData.streakCount;
-                
-                const profileStreak = document.getElementById('profile-streak');
-                if (profileStreak) {
-                    profileStreak.querySelector('span').textContent = userData.streakCount;
-                }
-            }
-        }
-
-        function updateLevelDisplay() {
-            const currentLevel = userData.level || 1;
-            userLevelEl.textContent = `Lvl ${currentLevel}`;
-            document.getElementById('profile-level').textContent = `Lvl ${currentLevel}`;
-        }
-
-        function updateReferralUI() {
-            if (userData.referredBy) {
-                referralInputSection.classList.add('hidden');
-                referralUsedSection.classList.remove('hidden');
-                referralBonusAmountEl.textContent = 100;
-            } else {
-                referralInputSection.classList.remove('hidden');
-                referralUsedSection.classList.add('hidden');
-            }
-        }
-
-        async function updateReferralStats() {
-            const referralsRef = collection(db, "users");
-            const q = query(referralsRef, where("referredBy", "==", userData.referralCode));
-            const querySnapshot = await getDocs(q);
-            
-            totalReferralsEl.textContent = querySnapshot.size;
-            referralEarningsEl.textContent = querySnapshot.size * 100;
-        }
-
-        function updateAdsLeftCount() {
-            const today = new Date().toISOString().split('T')[0];
-            if (userData.lastAdWatchDate !== today) {
-                userData.dailyAdCount = 0;
-            }
-            const adsLeft = Math.max(0, (appConfig.dailyAdLimit || 10) - userData.dailyAdCount);
-            adsLeftCountEl.textContent = adsLeft;
-        }
-
-        function updateDynamicPaymentFields() {
-            const selectedMethod = withdrawMethodSelect.value.toLowerCase();
-            let placeholder = "Detail Daalein";
-            if (selectedMethod.includes('upi')) placeholder = "আপনার UPI আইডি লিখুন";
-            if (selectedMethod.includes('paytm')) placeholder = "আপনার Paytm নম্বর লিখুন";
-            if (selectedMethod.includes('bkash')) placeholder = "আপনার Bkash নম্বর লিখুন";
-            if (selectedMethod.includes('nagad')) placeholder = "আপনার Nagad নম্বর লিখুন";
-            if (selectedMethod.includes('rocket')) placeholder = "আপনার Rocket নম্বর লিখুন";
-            paymentDetailsContainer.innerHTML = `<input id="payment-detail-input" type="text" placeholder="${placeholder}" class="w-full p-3 rounded-lg input-field">`;
-        }
-
-        function showMainPage(pageId) {
-            document.querySelectorAll('.main-page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-        }
-
-        function navigateTo(pageId) {
-            document.querySelectorAll('.sub-page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active', 'text-accent');
-                if (link.dataset.page === pageId) link.classList.add('active', 'text-accent');
-            });
-            
-            if (pageId === 'wallet-page') loadWithdrawalHistory();
-            if (pageId === 'refer-page') updateReferralStats();
-            if (pageId === 'notifications-page') loadNotifications();
-            if (pageId === 'profile-page') updateProfileStats();
-        }
-        window.navigateTo = navigateTo;
-
-        function setupEventListeners() {
-            document.getElementById('show-signup').addEventListener('click', (e) => {
-                e.preventDefault();
-                document.getElementById('login-view').classList.add('hidden');
-                document.getElementById('signup-view').classList.remove('hidden');
-            });
-            
-            document.getElementById('show-login').addEventListener('click', (e) => {
-                e.preventDefault();
-                document.getElementById('signup-view').classList.add('hidden');
-                document.getElementById('login-view').classList.remove('hidden');
-            });
-            
-            document.getElementById('signup-btn').addEventListener('click', handleSignup);
-            document.getElementById('login-btn').addEventListener('click', handleLogin);
-            document.getElementById('logout-btn').addEventListener('click', handleLogout);
-            
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const pageId = link.dataset.page;
-                    navigateTo(pageId);
-                });
-            });
-            
-            document.getElementById('notification-bell').addEventListener('click', () => {
-                navigateTo('notifications-page');
-            });
-            
-            document.getElementById('copy-code-btn').addEventListener('click', copyReferralCode);
-            document.getElementById('share-btn').addEventListener('click', shareReferralCode);
-            document.getElementById('withdraw-btn').addEventListener('click', handleWithdrawal);
-            document.getElementById('home-withdraw-btn').addEventListener('click', () => navigateTo('wallet-page'));
-            document.getElementById('apply-referral-btn').addEventListener('click', handleApplyReferralCode);
-            withdrawMethodSelect.addEventListener('change', updateDynamicPaymentFields);
-
-            document.getElementById('profile-image-upload').addEventListener('change', handleProfileImageUpload);
-            
-            document.getElementById('alert-ok-btn').addEventListener('click', () => {
-                document.getElementById('custom-alert').classList.add('hidden');
-            });
-        }
-
-        async function handleSignup() {
-            const name = document.getElementById('signup-name').value;
-            const email = document.getElementById('signup-email').value;
-            const password = document.getElementById('signup-password').value;
-            
-            if (!name || !email || !password) {
-                return showAlert("অনুগ্রহ করে সমস্ত ঘর পূরণ করুন।");
-            }
-            
-            if (password.length < 6) {
-                return showAlert("পাসওয়ার্ড至少 ৬টি অক্ষর長 হওয়া প্রয়োজন。");
-            }
-            
-            loader.style.display = 'flex';
-            
-            try {
-                await createUserWithEmailAndPassword(auth, email, password);
-            } catch (error) {
-                showAlert(error.message);
-                loader.style.display = 'none';
-            }
-        }
-
-        async function handleLogin() {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            
-            if (!email || !password) {
-                return showAlert("অনুগ্রহ করে Email Or Password দিন।");
-            }
-            
-            loader.style.display = 'flex';
-            
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-            } catch (error) {
-                showAlert(error.message);
-                loader.style.display = 'none';
-            }
-        }
-
-        async function handleLogout() {
-            await signOut(auth);
-        }
-
-        async function checkNewNotifications() {
-            const lastCheck = userData.lastNotificationCheck;
-            if (!lastCheck || typeof lastCheck.seconds === 'undefined') {
-                return;
-            }
-            
-            const q = query(collection(db, "notifications"), where("createdAt", ">", lastCheck), limit(1));
-            const querySnapshot = await getDocs(q);
-            
-            if (!querySnapshot.empty) {
-                notificationDot.style.display = 'block';
-                notificationBell.classList.add('ringing');
-                
-                try {
-                    await notificationSound.play();
-                } catch (error) {
-                    console.log("Notification sound play failed:", error);
-                }
-                
-                setTimeout(() => {
-                    notificationBell.classList.remove('ringing');
-                }, 2000);
-            } else {
-                notificationDot.style.display = 'none';
-            }
-        }
-
-        async function loadNotifications() {
-            const listEl = document.getElementById('notifications-list');
-            listEl.innerHTML = '<p class="text-gray-400">Loading...</p>';
-            notificationDot.style.display = 'none';
-            
-            const q = query(collection(db, "notifications"), orderBy("createdAt", "desc"));
-            
-            try {
-                const querySnapshot = await getDocs(q);
-                if (querySnapshot.empty) {
-                    listEl.innerHTML = '<p class="text-gray-400 text-center">Koi notifications nahi hain.</p>';
-                    return;
-                }
-                
-                listEl.innerHTML = '';
-                querySnapshot.forEach(doc => {
-                    const msg = doc.data();
-                    const date = msg.createdAt ? msg.createdAt.toDate().toLocaleDateString() : 'N/A';
-                    listEl.innerHTML += `
-                        <div class="card-bg p-4 rounded-lg">
-                            <div class="flex justify-between items-center mb-1">
-                                <h3 class="font-bold">${msg.title}</h3>
-                                <p class="text-xs text-gray-400">${date}</p>
-                            </div>
-                            <p class="text-sm text-gray-300">${msg.message}</p>
-                        </div>
-                    `;
-                });
-                
-                await updateDoc(doc(db, "users", currentUser.uid), { 
-                    lastNotificationCheck: serverTimestamp() 
-                });
-            } catch (error) {
-                console.error("Error loading notifications:", error);
-                listEl.innerHTML = '<p class="text-red-400">Notifications load করার সময় একটি ত্রুটি হয়েছে।</p>';
-            }
-        }
-
-        async function loadWithdrawalHistory() {
-            const historyList = document.getElementById('withdrawal-history-list');
-            historyList.innerHTML = '<p class="text-gray-400">History load ho rahi hai...</p>';
-            
-            const q = query(collection(db, "withdrawals"), where("userId", "==", currentUser.uid));
-            
-            try {
-                const querySnapshot = await getDocs(q);
-                if (querySnapshot.empty) {
-                    historyList.innerHTML = '<p class="text-gray-400">Aapne abhi tak koi withdrawal nahi kiya hai.</p>';
-                    return;
-                }
-                
-                const withdrawals = [];
-                querySnapshot.forEach(doc => withdrawals.push(doc.data()));
-                
-                withdrawals.sort((a, b) => (b.requestedAt?.seconds || 0) - (a.requestedAt?.seconds || 0));
-                
-                historyList.innerHTML = '';
-                withdrawals.forEach(request => {
-                    const status = request.status;
-                    let statusColor = 'text-yellow-400';
-                    if (status === 'approved') statusColor = 'text-green-400';
-                    else if (status === 'rejected') statusColor = 'text-red-400';
-                    
-                    const date = request.requestedAt ? request.requestedAt.toDate().toLocaleDateString() : 'N/A';
-                    
-                    historyList.innerHTML += `
-                        <div class="card-bg p-3 rounded-lg flex items-center justify-between">
-                            <div>
-                                <p class="font-semibold">${request.amount} Coins - ${request.method}</p>
-                                <p class="text-xs text-gray-400">${date}</p>
-                            </div>
-                            <p class="font-bold ${statusColor} capitalize">${status}</p>
-                        </div>
-                    `;
-                });
-            } catch (error) {
-                console.error("Error fetching withdrawal history: ", error);
-                historyList.innerHTML = '<p class="text-red-400">History লোড করার সময় একটি ত্রুটি হয়েছে।</p>';
-            }
-        }
         
-        async function handleApplyReferralCode() {
-            if (userData.referredBy) {
-                return showAlert("আপনি ইতিমধ্যেই একটি রেফারেল কোড ব্যবহার করেছেন।");
-            }
-            
-            const codeInput = document.getElementById('enter-referral-code');
-            const code = codeInput.value.trim().toUpperCase();
-            
-            if (!code) {
-                return showAlert("অনুগ্রহ করে একটি কোড লিখুন।");
-            }
-            
-            if (code === userData.referralCode) {
-                return showAlert("আপনি নিজের কোড ব্যবহার করতে পারবেন না।");
-            }
-            
-            loader.style.display = 'flex';
-            await applyReferralBonus(code, true);
-            codeInput.value = '';
-            loader.style.display = 'none';
+
+        if (viewId === 'history-view') renderHistory();
+
+    }
+
+    
+
+    // --- Data Persistence ---
+
+    function loadData() {
+
+        const savedData = localStorage.getItem('easyEarningBotV2');
+
+        if (savedData) {
+
+            const data = JSON.parse(savedData);
+
+            points = data.points || 0;
+
+            balance = data.balance || 0.00;
+
+            historyLog = data.historyLog || [];
+
         }
 
-        async function applyReferralBonus(referrerCode, isManualApply = false) {
-            const usersRef = collection(db, "users");
-            const q = query(usersRef, where("referralCode", "==", referrerCode));
-            
-            try {
-                const querySnapshot = await getDocs(q);
-                if (!querySnapshot.empty) {
-                    const referrerDoc = querySnapshot.docs[0];
-                    const referrerRef = doc(db, "users", referrerDoc.id);
-                    const referrerData = referrerDoc.data();
-                    
-                    await updateDoc(referrerRef, { 
-                        balance: (referrerData.balance || 0) + 100 
-                    });
-                    
-                    const newUserRef = doc(db, "users", currentUser.uid);
-                    await updateDoc(newUserRef, { 
-                        balance: (userData.balance || 0) + 100, 
-                        referredBy: referrerCode 
-                    });
-                    
-                    userData.balance += 100;
-                    userData.referredBy = referrerCode;
-                    
-                    updateUI();
-                    updateReferralUI();
-                    
-                    if (isManualApply) {
-                        showAlert(`Referral code applied successfully! You received 100 coins.`);
-                    }
-                } else {
-                    if (isManualApply) {
-                        showAlert("Invalid referral code.");
-                    }
-                }
-            } catch(error) {
-                console.error("Error applying referral bonus: ", error);
-                if (isManualApply) {
-                    showAlert("Error applying referral code: " + error.message);
-                }
-            }
-        }
+        updateDisplay();
 
-        async function handleWithdrawal() {
-            const amount = parseInt(document.getElementById('withdraw-amount').value);
-            const method = document.getElementById('withdraw-method').value;
-            const paymentDetailInput = document.getElementById('payment-detail-input');
-            const paymentDetail = paymentDetailInput ? paymentDetailInput.value.trim() : '';
-            
-            const minWithdrawal = appConfig.minWithdrawal || 5000;
-            
-            if (!amount || amount <= 0) {
-                return showAlert("Kripya valid amount daalein.");
-            }
-            
-            if (amount < minWithdrawal) {
-                return showAlert(`Minimum withdrawal ${minWithdrawal} coins hai.`);
-            }
-            
-            if (amount > userData.balance) {
-                return showAlert("Insufficient balance.");
-            }
-            
-            if (!paymentDetail) {
-                return showAlert("Kripya payment detail daalein (UPI ID ya Paytm Number).");
-            }
-            
-            try {
-                await updateBalance(-amount);
-                
-                await addDoc(collection(db, "withdrawals"), {
-                    userId: currentUser.uid,
-                    userName: userData.name,
-                    userEmail: userData.email,
-                    amount: amount,
-                    method: method,
-                    paymentDetail: paymentDetail,
-                    status: "pending",
-                    requestedAt: serverTimestamp()
-                });
-                
-                await updateDoc(doc(db, "users", currentUser.uid), {
-                    totalWithdrawn: (userData.totalWithdrawn || 0) + amount
-                });
-                userData.totalWithdrawn = (userData.totalWithdrawn || 0) + amount;
-                
-                showAlert("Withdrawal request safaltapoorvak submit ho gayi hai!");
-                document.getElementById('withdraw-amount').value = '';
-                paymentDetailInput.value = '';
-                
-            } catch (error) {
-                showAlert("Request submit karne mein error: " + error.message);
-                await updateBalance(amount);
-            }
-        }
+    }
 
-        function copyReferralCode() {
-            const textToCopy = referralCodeEl.textContent;
-            const textArea = document.createElement("textarea");
-            textArea.style.position = 'fixed';
-            textArea.style.top = '-100px';
-            textArea.value = textToCopy;
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            
-            try {
-                document.execCommand('copy');
-                showAlert("Referral code copy ho gaya!");
-            } catch (err) {
-                showAlert("Code copy karne mein विफल.");
-            }
-            
-            document.body.removeChild(textArea);
-        }
-        
-        function shareReferralCode() {
-            const text = `FbmReward এ যুক্ত হন আর টাকা কামাও! 🎁Bonus পাওয়ার জন্য আমার referral code ব্যাবহার করো: ${userData.referralCode}`;
-            
-            if (navigator.share) {
-                navigator.share({ 
-                    title: 'FbmReward এ যুক্ত হন এবং ফ্রি ইনকাম করুণ!', 
-                    text: text, 
-                    url: window.location.href 
-                }).catch((error) => console.error("Share failed:", error));
+
+
+    function saveData() {
+
+        localStorage.setItem('easyEarningBotV2', JSON.stringify({ points, balance, historyLog }));
+
+    }
+
+
+
+    function updateDisplay() {
+
+        document.getElementById('points-value').textContent = points;
+
+        document.getElementById('balance-value').textContent = `$${balance.toFixed(2)}`;
+
+    }
+
+    
+
+    // --- User & Profile ---
+
+    function loadTelegramUser() {
+
+        if (tgUser) {
+
+            document.getElementById('username').textContent = tgUser.first_name || 'Telegram User';
+
+            const profilePicDiv = document.getElementById('profile-pic');
+
+            if (tgUser.photo_url) {
+
+                profilePicDiv.innerHTML = `<img src="${tgUser.photo_url}" alt="P">`;
+
             } else {
-                copyReferralCode();
-                showAlert(" লিংক শেয়ার করার সুবিধা উপলব্ধ না। অনুগ্রহ করে Referral code copy করে শেয়ার করুন!");
-            }
-        }
 
-        async function handleProfileImageUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+                profilePicDiv.textContent = (tgUser.first_name || 'U').charAt(0);
 
-            if (!file.type.startsWith('image/')) {
-                return showAlert("Please select an image file.");
             }
 
-            if (file.size > 5 * 1024 * 1024) {
-                return showAlert("Image size should be less than 5MB.");
+        }
+
+    }
+
+
+
+    // --- History Logic ---
+
+    function addToHistory(type, detail) {
+
+        const timestamp = new Date().toISOString();
+
+        historyLog.unshift({ type, detail, timestamp });
+
+        if (historyLog.length > 50) historyLog.pop();
+
+        saveData();
+
+    }
+
+
+
+    function renderHistory() {
+
+        const list = document.getElementById('history-list');
+
+        if (historyLog.length === 0) {
+
+            list.innerHTML = `<div class="list-item"><div class="info"><div class="name">No activity yet.</div><div class="detail">Watch some ads to get started!</div></div></div>`;
+
+            return;
+
+        }
+
+        
+
+        list.innerHTML = historyLog.map(item => {
+
+            const icon = item.type === 'earn' 
+
+                ? '<i class="fa-solid fa-plus-circle" style="color: var(--primary-color);"></i>' 
+
+                : '<i class="fa-solid fa-paper-plane" style="color: var(--accent-color);"></i>';
+
+            return `
+
+                <div class="list-item">
+
+                    <div class="history-icon">${icon}</div>
+
+                    <div class="info">
+
+                        <div class="name">${item.detail}</div>
+
+                        <div class="detail">${new Date(item.timestamp).toLocaleString()}</div>
+
+                    </div>
+
+                </div>`;
+
+        }).join('');
+
+    }
+
+
+
+    // --- Leaderboard Logic ---
+
+    function renderLeaderboard() {
+
+        const leaderboardData = [
+
+            { name: "CryptoKing", score: 2540, avatar: "https://i.pravatar.cc/150?img=1" },
+
+            { name: "Elena", score: 2210, avatar: "https://i.pravatar.cc/150?img=2" },
+
+            { name: "ProMiner", score: 1980, avatar: "https://i.pravatar.cc/150?img=3" },
+
+            { name: "Aisha", score: 1750, avatar: "https://i.pravatar.cc/150?img=4" },
+
+            { name: "BotMaster", score: 1530, avatar: "https://i.pravatar.cc/150?img=5" },
+
+        ];
+
+        
+
+        document.getElementById('leaderboard-list').innerHTML = leaderboardData.map((user, index) => `
+
+            <div class="list-item">
+
+                <div class="rank">#${index + 1}</div>
+
+                <img src="${user.avatar}" class="avatar" alt="Avatar">
+
+                <div class="info"><div class="name">${user.name}</div></div>
+
+                <div class="score">${user.score} pts</div>
+
+            </div>
+
+        `).join('');
+
+    }
+
+
+
+    // --- Earning Functions ---
+
+    function grantReward() {
+
+        points += pointsPerAd;
+
+        balance = points * ratePerPoint;
+
+        updateDisplay();
+
+        addToHistory('earn', `+${pointsPerAd} Point(s) from Ad`);
+
+        saveData();
+
+        Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+
+        alert(`Congratulations! You've earned +${pointsPerAd} point. Your new balance is $${balance.toFixed(2)}.`);
+
+    }
+
+
+
+    function showRewardedInterstitial() {
+
+        if (typeof show_9459352 !== 'function') return alert('Ad provider is not ready.');
+
+        show_9459352().then(grantReward).catch(e => alert('Ad could not be shown.'));
+
+    }
+
+
+
+    function showRewardedPopup() {
+
+        if (typeof show_9459352 !== 'function') return alert('Ad provider is not ready.');
+
+        show_9459352('pop').then(grantReward).catch(e => alert('Ad could not be shown.'));
+
+    }
+
+
+
+    // --- Withdrawal Logic ---
+
+    function openWithdrawModal() {
+
+        if (balance < 5) {
+
+            Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+
+            return alert("Minimum withdrawal amount is $5.00. Keep earning!");
+
+        }
+
+        document.getElementById('withdraw-modal').classList.add('active');
+
+    }
+
+    
+
+    function closeWithdrawModal() {
+
+        document.getElementById('withdraw-modal').classList.remove('active');
+
+    }
+
+
+
+    function requestWithdraw() {
+
+        closeWithdrawModal();
+
+        const botToken = '7201062892:AAGewLnDhE6l7buTuXAIScVhI4d-XJZZ5Hs';
+
+        const adminUserId = '6357701459';
+
+        const userInfo = tgUser ? `@${tgUser.username} (ID: ${tgUser.id})` : 'Unknown User';
+
+        const message = `💸 *Withdrawal Request*\n\n👤 *User:* ${userInfo}\n💰 *Amount:* $${balance.toFixed(2)}\n\n_Please process this request._`;
+
+
+
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+
+            method: "POST",
+
+            headers: { 'Content-Type': 'application/json' },
+
+            body: JSON.stringify({ chat_id: adminUserId, text: message, parse_mode: "Markdown" })
+
+        }).then(res => res.json())
+
+        .then(data => {
+
+            if (data.ok) {
+
+                Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+
+                alert("Your withdrawal request has been sent successfully!");
+
+                addToHistory('withdraw', `Request for $${balance.toFixed(2)}`);
+
+            } else {
+
+                Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+
+                alert("Failed to send request. Please try again later.");
+
             }
 
-            loader.style.display = 'flex';
-            
-            try {
-                const storageRef = ref(storage, `profile-images/${currentUser.uid}`);
-                const snapshot = await uploadBytes(storageRef, file);
-                const downloadURL = await getDownloadURL(snapshot.ref);
-                
-                await updateDoc(doc(db, "users", currentUser.uid), {
-                    profileImage: downloadURL
-                });
-                
-                userData.profileImage = downloadURL;
-                document.getElementById('profile-image').src = downloadURL;
-                
-                showAlert("Profile image updated successfully!");
-            } catch (error) {
-                console.error("Error uploading profile image:", error);
-                showAlert("Error uploading image: " + error.message);
-            } finally {
-                loader.style.display = 'none';
-                event.target.value = '';
-            }
-        }
+        }).catch(err => {
 
-        window.editUserName = function() {
-            document.getElementById('new-user-name').value = userData.name || '';
-            document.getElementById('edit-name-modal').classList.remove('hidden');
-        }
+            Telegram.WebApp.HapticFeedback.notificationOccurred('error');
 
-        window.closeEditNameModal = function() {
-            document.getElementById('edit-name-modal').classList.add('hidden');
-        }
+            alert("An error occurred. Check your connection and try again.");
 
-        async function saveUserName() {
-            const newName = document.getElementById('new-user-name').value.trim();
-            
-            if (!newName) {
-                return showAlert("Please enter a valid name.");
-            }
-            
-            try {
-                await updateDoc(doc(db, "users", currentUser.uid), {
-                    name: newName
-                });
-                
-                userData.name = newName;
-                profileNameEl.textContent = newName;
-                
-                showAlert("Name updated successfully!");
-                closeEditNameModal();
-            } catch (error) {
-                showAlert("Error updating name: " + error.message);
-            }
-        }
+        });
 
-        async function checkDailyStreak() {
-            const today = new Date().toISOString().split('T')[0];
-            const yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1);
-            const yesterdayStr = yesterday.toISOString().split('T')[0];
-            
-            if (userData.lastTaskDate === yesterdayStr) {
-                const newStreak = (userData.streakCount || 0) + 1;
-                await updateDoc(doc(db, "users", currentUser.uid), { 
-                    streakCount: newStreak,
-                    lastTaskDate: today 
-                });
-                userData.streakCount = newStreak;
-                
-                if (newStreak % 7 === 0) {
-                    await updateBalance(100);
-                    showAlert(`🎉 Congratulations! ${newStreak} day streak bonus: 100 coins!`);
-                }
-            } else if (userData.lastTaskDate !== today) {
-                await updateDoc(doc(db, "users", currentUser.uid), { 
-                    streakCount: 1,
-                    lastTaskDate: today 
-                });
-                userData.streakCount = 1;
-            }
-        }
+    }
 
-        async function checkLevelUp() {
-            const currentLevel = userData.level || 1;
-            const nextLevel = currentLevel + 1;
-            
-            if (nextLevel <= 5 && userData.balance >= [0, 1000, 3000, 7000, 15000][nextLevel-1]) {
-                await updateDoc(doc(db, "users", currentUser.uid), { 
-                    level: nextLevel 
-                });
-                userData.level = nextLevel;
-                
-                const bonusAmount = [0, 50, 100, 200, 500][nextLevel-1];
-                if (bonusAmount > 0) {
-                    await updateBalance(bonusAmount);
-                    showAlert(`🎊 Level Up! You reached level ${nextLevel} and earned ${bonusAmount} coins bonus!`);
-                }
-            }
-        }
 
-        function showAlert(message) {
-            document.getElementById('alert-message').textContent = message;
-            document.getElementById('custom-alert').classList.remove('hidden');
-        }
-        window.showAlert = showAlert;
-    </script>
+
+    // --- Share & Referral ---
+
+    function shareApp() {
+
+        if (!tgUser) return alert("Could not get user data from Telegram.");
+
+        const botUsername = "Easyearing99_bot";
+
+        const referralLink = `https://t.me/${botUsername}?start=${tgUser.id}`;
+
+        const text = `🎉 Join this amazing bot and start earning! Use my link to get a special bonus:`;
+
+        const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(text)}`;
+
+        Telegram.WebApp.openTelegramLink(shareUrl);
+
+    }
+
+</script>
+
+
+
 </body>
+
+
 </html>
